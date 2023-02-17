@@ -6,11 +6,35 @@ editor: visual
 
 ## Importing Libraries
 
-```{r}
-library(tidyverse)
-library(tensorflow)
-library(readxl)
+```{r include=FALSE}
+#Installing Packages
 library(janitor)
+library(readxl)
+library(tidyverse)
+library(tidymodels)
+library("AmesHousing")
+library(stringr)
+library("olsrr")
+library("glmnet")
+library("doParallel")
+library(readr)
+library(maps)
+library(viridis)
+library(usmap)
+library(kknn)
+library(MASS)
+library(rpart)
+library(rpart.plot)
+library(keras)
+library(randomForest)
+library(discrim)
+library(caret)
+library(xgboost)
+library(vip)
+library(AICcmodavg)
+all_cores<-parallel::detectCores()
+cl<- makePSOCKcluster(all_cores)
+registerDoParallel(cl)
 ```
 
 ## Importing Data
@@ -19,3 +43,36 @@ library(janitor)
 data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>% 
   clean_names()
 ```
+
+## Exploratory Analysis
+
+```{r}
+#Visualizing Relationships
+
+#Comparing Date to number of people that participate
+data %>% 
+  ggplot(aes(x=date, y=number_of_reported_results))+
+  geom_point()
+
+#Are people getting better
+data %>% 
+  ggplot(aes(x=date, y=data$x7_or_more_tries_x))+
+  geom_point()
+
+#Are more people trying hard mode
+data %>% 
+  ggplot(aes(x=date, y=data$number_in_hard_mode))+
+  geom_point()
+
+#First attempt Guesses over time
+data %>% 
+  ggplot(aes(x=date, y=data$x1_try))+
+  geom_point()
+
+
+
+```
+
+## Problem 1: Predicting number of players getting correct
+
+This needs to be a regression model.
