@@ -10,10 +10,12 @@ editor: visual
 library(tidyverse)
 library(tensorflow)
 library(readxl)
+library(janitor)
 ```
 
 ## Importing Data
 
 ```{r}
-data<-read_excel("Problem_C_Data_Wordle.xlsx")
+data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>% 
+  clean_names()
 ```
