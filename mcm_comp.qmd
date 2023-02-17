@@ -9,6 +9,11 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(tensorflow)
+library(readxl)
 ```
 
-Test
+## Importing Data
+
+```{r}
+data<-read_excel("Problem_C_Data_Wordle.xlsx")
+```
