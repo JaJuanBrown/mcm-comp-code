@@ -186,13 +186,14 @@ i Use `x1_try` instead.</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating Data splits</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>future_date<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="at">x =</span> <span class="st">"2023/3/1"</span>),</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">contest_number =</span> <span class="dv">620</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>future_date<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="at">x =</span> <span class="st">"2023/3/1"</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">contest_number =</span> <span class="dv">620</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: `data_frame()` was deprecated in tibble 1.1.0.
 i Please use `tibble()` instead.</code></pre>
@@ -202,279 +203,31 @@ i Please use `tibble()` instead.</code></pre>
 <section id="basic-decision-tree" class="level2">
 <h2 class="anchored" data-anchor-id="basic-decision-tree">Basic Decision Tree</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Basic Decision Tree ##</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>untuned_reg_tree<span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">engine =</span> <span class="st">"rpart"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">cost_complexity =</span> <span class="fu">tune</span>())</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>reg_tree_grid<span class="ot">&lt;-</span><span class="fu">grid_regular</span>(<span class="fu">tree_depth</span>(),</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">cost_complexity</span>(),</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">min_n</span>(),</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                            <span class="at">levels =</span> <span class="dv">5</span>)</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>folds<span class="ot">&lt;-</span><span class="fu">vfold_cv</span>(training_data)</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>reg_tree_wf<span class="ot">&lt;-</span><span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(untuned_reg_tree) <span class="sc">%&gt;%</span> </span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(number_of_reported_results <span class="sc">~</span> date <span class="sc">+</span> contest_number)</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>reg_tree_results<span class="ot">&lt;-</span>reg_tree_wf <span class="sc">%&gt;%</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(<span class="at">resamples =</span> folds, <span class="at">grid =</span> reg_tree_grid)</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>best_reg_tree_params<span class="ot">&lt;-</span>reg_tree_results <span class="sc">%&gt;%</span></span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_best</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No value of `metric` was given; metric 'rmse' will be used.</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tune Tree Model</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>tuned_reg_tree<span class="ot">&lt;-</span><span class="fu">finalize_model</span>(untuned_reg_tree, best_reg_tree_params)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>reg_tree_wf<span class="ot">&lt;-</span> reg_tree_wf <span class="sc">%&gt;%</span> </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_model</span>(tuned_reg_tree) <span class="sc">%&gt;%</span> </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(training_data)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Depicting Accuracy</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">data_frame</span>(<span class="at">prediction =</span> <span class="fu">predict</span>(reg_tree_wf, test_data)<span class="sc">$</span>.pred,</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>           <span class="at">truth =</span> test_data<span class="sc">$</span>number_of_reported_results) <span class="sc">%&gt;%</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(prediction, truth))<span class="sc">+</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100000</span>, <span class="dv">300000</span>, <span class="at">by =</span> <span class="dv">100000</span>))<span class="sc">+</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100000</span>, <span class="dv">300000</span>, <span class="at">by =</span> <span class="dv">100000</span>))<span class="sc">+</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"midnightblue"</span>) <span class="sc">+</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Regression Tree Prediction Accuracy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="mcm_comp_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Prediction for March 1, 2023 participants</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(reg_tree_wf, <span class="at">new_data =</span> future_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 x 1
-  .pred
-  &lt;dbl&gt;
-1 21204</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tuned Model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tuned_reg_tree<span class="ot">&lt;-</span><span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"rpart"</span>, <span class="at">cost_complexity =</span> <span class="fl">0.0005623413</span>, <span class="at">tree_depth =</span> <span class="dv">11</span>, <span class="at">min_n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="boosted-tree" class="level2">
 <h2 class="anchored" data-anchor-id="boosted-tree">Boosted Tree</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Boosted Tree xGBoost ##</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>untuned_reg_xgb<span class="ot">&lt;-</span><span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>,</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">engine =</span> <span class="st">"xgboost"</span>,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                              <span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                              <span class="at">trees =</span> <span class="dv">1000</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                              <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                              <span class="at">tree_depth =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                              <span class="at">learn_rate =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                              <span class="at">sample_size =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                              <span class="at">loss_reduction =</span> <span class="fu">tune</span>())</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Tuning Boosted Tree</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>reg_xgb_grid <span class="ot">&lt;-</span> <span class="fu">grid_latin_hypercube</span>(<span class="fu">tree_depth</span>(),</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">min_n</span>(),</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">loss_reduction</span>(),</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">sample_size =</span> <span class="fu">sample_prop</span>(),</span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">finalize</span>(<span class="fu">mtry</span>(), training_data),</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">learn_rate</span>(),</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">size =</span> <span class="dv">30</span>)</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>reg_xgb_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(number_of_reported_results <span class="sc">~</span> date <span class="sc">+</span> contest_number) <span class="sc">%&gt;%</span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(untuned_reg_xgb)</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>folds<span class="ot">&lt;-</span><span class="fu">vfold_cv</span>(training_data)</span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>reg_xgb_res <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(reg_xgb_wf,</span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>                         <span class="at">resamples =</span> folds,</span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>                         <span class="at">grid =</span> reg_xgb_grid,</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>                         <span class="at">control =</span> <span class="fu">control_grid</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>best_reg_xgb_params<span class="ot">&lt;-</span> <span class="fu">select_best</span>(reg_xgb_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: No value of `metric` was given; metric 'rmse' will be used.</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>tuned_reg_xgb<span class="ot">&lt;-</span><span class="fu">finalize_model</span>(untuned_reg_xgb, best_reg_xgb_params)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>reg_xgb_wf<span class="ot">&lt;-</span> reg_xgb_wf <span class="sc">%&gt;%</span>  </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_model</span>(tuned_reg_xgb) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(training_data)</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Measuring Accuracy</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">data_frame</span>(<span class="at">prediction =</span> <span class="fu">predict</span>(reg_xgb_wf, test_data)<span class="sc">$</span>.pred,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">truth =</span> test_data<span class="sc">$</span>number_of_reported_results) <span class="sc">%&gt;%</span> </span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(prediction, truth))<span class="sc">+</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"gray50"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"midnightblue"</span>) <span class="sc">+</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100000</span>, <span class="dv">300000</span>, <span class="at">by =</span> <span class="dv">100000</span>))<span class="sc">+</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">100000</span>, <span class="dv">300000</span>, <span class="at">by =</span> <span class="dv">100000</span>))<span class="sc">+</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Boosted Tree Prediction Accuracy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="mcm_comp_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Predicting Number of Participants in March</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(reg_xgb_wf, future_date, <span class="at">interval =</span> <span class="st">'confidence'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 x 1
-   .pred
-   &lt;dbl&gt;
-1 25262.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>gbm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>function (formula = formula(data), distribution = "bernoulli", 
-    data = list(), weights, var.monotone = NULL, n.trees = 100, 
-    interaction.depth = 1, n.minobsinnode = 10, shrinkage = 0.1, 
-    bag.fraction = 0.5, train.fraction = 1, cv.folds = 0, keep.data = TRUE, 
-    verbose = FALSE, class.stratify.cv = NULL, n.cores = NULL) 
-{
-    mcall &lt;- match.call()
-    lVerbose &lt;- if (!is.logical(verbose)) {
-        FALSE
-    }
-    else {
-        verbose
-    }
-    mf &lt;- match.call(expand.dots = FALSE)
-    m &lt;- match(c("formula", "data", "weights", "offset"), names(mf), 
-        0)
-    mf &lt;- mf[c(1, m)]
-    mf$drop.unused.levels &lt;- TRUE
-    mf$na.action &lt;- na.pass
-    mf[[1]] &lt;- as.name("model.frame")
-    m &lt;- mf
-    mf &lt;- eval(mf, parent.frame())
-    Terms &lt;- attr(mf, "terms")
-    w &lt;- model.weights(mf)
-    offset &lt;- model.offset(mf)
-    y &lt;- model.response(mf)
-    if (missing(distribution)) {
-        distribution &lt;- guessDist(y)
-    }
-    if (is.character(distribution)) {
-        distribution &lt;- list(name = distribution)
-    }
-    if (!is.element(distribution$name, getAvailableDistributions())) {
-        stop("Distribution ", distribution$name, " is not supported.")
-    }
-    if (distribution$name == "multinomial") {
-        warning("Setting `distribution = \"multinomial\"` is ill-advised as it is ", 
-            "currently broken. It exists only for backwards compatibility. ", 
-            "Use at your own risk.", call. = FALSE)
-    }
-    var.names &lt;- attributes(Terms)$term.labels
-    x &lt;- model.frame(terms(reformulate(var.names)), data = data, 
-        na.action = na.pass)
-    response.name &lt;- as.character(formula[[2L]])
-    class.stratify.cv &lt;- getStratify(class.stratify.cv, d = distribution)
-    group &lt;- NULL
-    num.groups &lt;- 0
-    if (distribution$name != "pairwise") {
-        nTrain &lt;- floor(train.fraction * nrow(x))
-    }
-    else {
-        distribution.group &lt;- distribution[["group"]]
-        if (is.null(distribution.group)) {
-            stop(paste("For pairwise regression, `distribution` must be a list of", 
-                "the form `list(name = \"pairwise\", group = c(\"date\",", 
-                "\"session\", \"category\", \"keywords\"))`."))
-        }
-        i &lt;- match(distribution.group, colnames(data))
-        if (any(is.na(i))) {
-            stop("Group column does not occur in data: ", distribution.group[is.na(i)], 
-                ".")
-        }
-        group &lt;- factor(do.call(paste, c(data[, distribution.group, 
-            drop = FALSE], sep = ":")))
-        if ((!missing(weights)) &amp;&amp; (!is.null(weights))) {
-            w.min &lt;- tapply(w, INDEX = group, FUN = min)
-            w.max &lt;- tapply(w, INDEX = group, FUN = max)
-            if (any(w.min != w.max)) {
-                stop("For `distribution = \"pairwise\"`, all instances for the same ", 
-                  "group must have the same weight.")
-            }
-            w &lt;- w * length(w.min)/sum(w.min)
-        }
-        perm.levels &lt;- levels(group)[sample(1:nlevels(group))]
-        group &lt;- factor(group, levels = perm.levels)
-        ord.group &lt;- order(group, -y)
-        group &lt;- group[ord.group]
-        y &lt;- y[ord.group]
-        x &lt;- x[ord.group, , drop = FALSE]
-        w &lt;- w[ord.group]
-        num.groups.train &lt;- max(1, round(train.fraction * nlevels(group)))
-        nTrain &lt;- max(which(group == levels(group)[num.groups.train]))
-        Misc &lt;- group
-    }
-    cv.error &lt;- NULL
-    if (cv.folds == 1) {
-        cv.folds &lt;- 0
-    }
-    if (cv.folds &gt; 1) {
-        cv.results &lt;- gbmCrossVal(cv.folds = cv.folds, nTrain = nTrain, 
-            n.cores = n.cores, class.stratify.cv = class.stratify.cv, 
-            data = data, x = x, y = y, offset = offset, distribution = distribution, 
-            w = w, var.monotone = var.monotone, n.trees = n.trees, 
-            interaction.depth = interaction.depth, n.minobsinnode = n.minobsinnode, 
-            shrinkage = shrinkage, bag.fraction = bag.fraction, 
-            var.names = var.names, response.name = response.name, 
-            group = group)
-        cv.error &lt;- cv.results$error
-        p &lt;- cv.results$predictions
-    }
-    gbm.obj &lt;- gbm.fit(x = x, y = y, offset = offset, distribution = distribution, 
-        w = w, var.monotone = var.monotone, n.trees = n.trees, 
-        interaction.depth = interaction.depth, n.minobsinnode = n.minobsinnode, 
-        shrinkage = shrinkage, bag.fraction = bag.fraction, nTrain = nTrain, 
-        keep.data = keep.data, verbose = lVerbose, var.names = var.names, 
-        response.name = response.name, group = group)
-    gbm.obj$train.fraction &lt;- train.fraction
-    gbm.obj$Terms &lt;- Terms
-    gbm.obj$cv.error &lt;- cv.error
-    gbm.obj$cv.folds &lt;- cv.folds
-    gbm.obj$call &lt;- mcall
-    gbm.obj$m &lt;- m
-    if (cv.folds &gt; 1) {
-        gbm.obj$cv.fitted &lt;- p
-    }
-    if (distribution$name == "pairwise") {
-        gbm.obj$ord.group &lt;- ord.group
-        gbm.obj$fit &lt;- gbm.obj$fit[order(ord.group)]
-    }
-    gbm.obj
-}
-&lt;bytecode: 0x0000000034ecb450&gt;
-&lt;environment: namespace:gbm&gt;</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>tuned_reg_xgb<span class="ot">&lt;-</span><span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"xgboost"</span>,<span class="at">mtry =</span> <span class="dv">2</span>, <span class="at">trees =</span> <span class="dv">1000</span>, <span class="at">min_n =</span> <span class="dv">13</span>, <span class="at">tree_depth =</span> <span class="dv">6</span>, <span class="at">learn_rate =</span> <span class="fl">0.01872842</span>, <span class="at">loss_reduction =</span> <span class="fl">1.647096</span>, <span class="at">sample_size =</span> <span class="fl">0.9797893</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="support-vector-machine-regression" class="level2">
 <h2 class="anchored" data-anchor-id="support-vector-machine-regression">Support Vector Machine Regression</h2>
 <div class="cell">
-
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>tuned_svm<span class="ot">&lt;-</span><span class="fu">svm_rbf</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"kernlab"</span>, <span class="at">cost =</span> <span class="dv">32</span>, <span class="at">rbf_sigma =</span> <span class="dv">1</span>, <span class="at">margin =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="comparing-regressions" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-regressions">Comparing Regressions</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Trying to visualize our model's accuracy</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">xgb_pred =</span> <span class="fu">predict</span>(reg_xgb_wf, data)<span class="sc">$</span>.pred,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">tree_pred=</span> <span class="fu">predict</span>(reg_tree_wf, data)<span class="sc">$</span>.pred,</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">truth =</span> data<span class="sc">$</span>number_of_reported_results,</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">date =</span> data<span class="sc">$</span>date) <span class="sc">%&gt;%</span> </span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date))<span class="sc">+</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y=</span>truth), <span class="at">alpha =</span> <span class="fl">0.3</span>)<span class="sc">+</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>xgb_pred), <span class="at">color=</span><span class="st">'red'</span>)<span class="sc">+</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>tree_pred), <span class="at">color=</span><span class="st">'blue'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="mcm_comp_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
+</section>
+<section id="storing-tuned-models" class="level2">
+<h2 class="anchored" data-anchor-id="storing-tuned-models">Storing Tuned Models</h2>
 </section>
 
 </main>
