@@ -29,6 +29,7 @@ library(keras)
 library(randomForest)
 library(discrim)
 library(caret)
+library(gbm)
 library(xgboost)
 library(vip)
 library(AICcmodavg)
@@ -51,7 +52,6 @@ data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>%
 
 #Comparing Date to number of people that participate
 data %>% 
-  mutate(number_of_reported_results = log(number_of_reported_results), base = exp(1)) %>% 
   ggplot(aes(x=date, y=number_of_reported_results))+
   geom_point()
 
@@ -84,7 +84,14 @@ set.seed(1234)
 split<-initial_split(data, prop = .9)
 training_data<-training(split)
 test_data<-testing(split)
+
+#The Future Date we want to predict the participants for
+future_date<-data_frame(date = as.Date(x = "2023/3/1"),
+                        contest_number = 620)
+
 ```
+
+## Basic Decision Tree
 
 ```{r}
 ## Basic Decision Tree ##
@@ -100,7 +107,7 @@ reg_tree_grid<-grid_regular(tree_depth(),
 folds<-vfold_cv(training_data)
 reg_tree_wf<-workflow() %>% 
   add_model(untuned_reg_tree) %>% 
-  add_formula(number_of_reported_results ~ date)
+  add_formula(number_of_reported_results ~ date + contest_number)
 
 reg_tree_results<-reg_tree_wf %>%
   tune_grid(resamples = folds, grid = reg_tree_grid)
@@ -114,45 +121,52 @@ best_reg_tree_params<-reg_tree_results %>%
 ```{r}
 #Tune Tree Model
 tuned_reg_tree<-finalize_model(untuned_reg_tree, best_reg_tree_params)
+
+reg_tree_wf<- reg_tree_wf %>% 
+  update_model(tuned_reg_tree) %>% 
+  fit(training_data)
+
+
 #Depicting Accuracy
-reg_tree_fit<-last_fit(tuned_reg_tree, number_of_reported_results ~ date, split) %>%
-collect_predictions()
-#Depicting Accuracy
-reg_tree_fit%>%
-ggplot(aes(number_of_reported_results, .pred))+
-geom_abline(slope = 1, lty = 2, color = "gray50", alpha = 0.5) +
-geom_point(alpha = 0.6, color = "midnightblue") +
-ggtitle("Regression Tree Prediction Accuracy")
+data_frame(prediction = predict(reg_tree_wf, test_data)$.pred,
+           truth = test_data$number_of_reported_results) %>%
+  ggplot(aes(prediction, truth))+
+  geom_abline(slope = 1, lty = 2, color = "gray50", alpha = 0.5) +
+   scale_x_continuous(breaks = seq(100000, 300000, by = 100000))+
+  scale_y_continuous(breaks = seq(100000, 300000, by = 100000))+
+  geom_point(alpha = 0.6, color = "midnightblue") +
+  ggtitle("Regression Tree Prediction Accuracy")
+
+#Prediction for March 1, 2023 participants
+predict(reg_tree_wf, new_data = future_date)
 ```
 
-Boosted Tree
+## Boosted Tree
 
 ```{r}
 ## Boosted Tree xGBoost ##
 untuned_reg_xgb<-boost_tree(mode = "regression",
-engine = "xgboost",
-mtry = tune(),
-trees = 1000,
-min_n = tune(),
-tree_depth = tune(),
-learn_rate = tune(),
-sample_size = tune(),
-loss_reduction = tune())
+                              engine = "xgboost",
+                              mtry = tune(),
+                              trees = 1000,
+                              min_n = tune(),
+                              tree_depth = tune(),
+                              learn_rate = tune(),
+                              sample_size = tune(),
+                              loss_reduction = tune())
 
 #Tuning Boosted Tree
-reg_xgb_grid <- grid_latin_hypercube(
-tree_depth(),
-min_n(),
-loss_reduction(),
-sample_size = sample_prop(),
-finalize(mtry(), training_data),
-learn_rate(),
-size = 30
-)
+reg_xgb_grid <- grid_latin_hypercube(tree_depth(),
+                                      min_n(),
+                                      loss_reduction(),
+                                      sample_size = sample_prop(),
+                                      finalize(mtry(), training_data),
+                                      learn_rate(),
+                                      size = 30)
 
 
 reg_xgb_wf <- workflow() %>%
-  add_formula(number_of_reported_results ~ date) %>%
+  add_formula(number_of_reported_results ~ date + contest_number) %>%
   add_model(untuned_reg_xgb)
 
 folds<-vfold_cv(training_data)
@@ -165,24 +179,48 @@ best_reg_xgb_params<- select_best(reg_xgb_res)
 ```
 
 ```{r}
-#Tuned Model
+#Updating Workflow with Tuned Model and Fitting it to Training Data
 tuned_reg_xgb<-finalize_model(untuned_reg_xgb, best_reg_xgb_params)
 
-#Measuring Accuracy
-reg_xgb_fit<-last_fit(tuned_reg_xgb,number_of_reported_results ~ date, split) %>%
-  collect_predictions()
+reg_xgb_wf<- reg_xgb_wf %>%  
+  update_model(tuned_reg_xgb) %>% 
+  fit(training_data)
 
-reg_xgb_fit%>%
-  ggplot(aes(number_of_reported_results, .pred))+
+#Measuring Accuracy
+data_frame(prediction = predict(reg_xgb_wf, test_data)$.pred,
+           truth = test_data$number_of_reported_results) %>% 
+  ggplot(aes(prediction, truth))+
   geom_abline(slope = 1, lty = 2, color = "gray50", alpha = 0.5) +
   geom_point(alpha = 0.6, color = "midnightblue") +
+  scale_x_continuous(breaks = seq(100000, 300000, by = 100000))+
+  scale_y_continuous(breaks = seq(100000, 300000, by = 100000))+
   ggtitle("Boosted Tree Prediction Accuracy")
 
 #Predicting Number of Participants in March
-future_date<-data_frame(date = as.Date(x = "2023/3/1"))
+predict(reg_xgb_wf, future_date, interval = 'confidence')
+gbm
 
+  
+```
 
-reg_xgb_wf<- reg_xgb_wf %>%  
-  update_model(tuned_reg_xgb)
+## Support Vector Machine Regression
+
+```{r}
+
+```
+
+## Comparing Regressions
+
+```{r}
+#Trying to visualize our model's accuracy
+
+data.frame(xgb_pred = predict(reg_xgb_wf, data)$.pred,
+           tree_pred= predict(reg_tree_wf, data)$.pred,
+           truth = data$number_of_reported_results,
+           date = data$date) %>% 
+  ggplot(aes(x=date))+
+  geom_col(aes(y=truth), alpha = 0.3)+
+  geom_line(aes(y=xgb_pred), color='red')+
+  geom_line(aes(y=tree_pred), color='blue')
 
 ```
