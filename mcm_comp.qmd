@@ -44,6 +44,8 @@ registerDoParallel(cl)
 ```{r}
 data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>% 
   clean_names()
+difficulty_data <- read_excel("difficulty_data.xlsx")
+data$difficulty<-difficulty_data$difficulty
 ```
 
 ## Exploratory Analysis
@@ -122,3 +124,93 @@ tuned_svm<-svm_rbf(mode = "regression", engine = "kernlab", cost = 32, rbf_sigma
 ## Comparing Regressions
 
 ## Storing Tuned Models
+
+```{r}
+difficulty<-c()
+for (i in 1:nrow(data)){
+  current_row=data[i,]
+  #Determining the difficulty of this word
+  if (((current_row$x1_try + current_row$x2_tries + current_row$x3_tries) >
+    (current_row$x3_tries + current_row$x4_tries)) && ((current_row$x1_try + current_row$x2_tries + current_row$x3_tries) >
+    (current_row$x4_tries + current_row$x5_tries)) && ((current_row$x1_try + current_row$x2_tries + current_row$x3_tries) >
+    (current_row$x5_tries + current_row$x6_tries)) && ((current_row$x1_try + current_row$x2_tries + current_row$x3_tries) >
+    (current_row$x6_tries + current_row$x7_or_more_tries_x))){
+    difficulty[i]<- "Very Easy"
+  }else if (((current_row$x3_tries + current_row$x4_tries) >
+    (current_row$x1_try + current_row$x2_tries + current_row$x3_tries)) && ((current_row$x3_tries + current_row$x4_tries) >
+    (current_row$x4_tries + current_row$x5_tries)) && ((current_row$x3_tries + current_row$x4_tries) >
+    (current_row$x5_tries + current_row$x6_tries)) && ((current_row$x3_tries + current_row$x4_tries) >
+    (current_row$x6_tries + current_row$x7_or_more_tries_x))){
+    difficulty[i]<- "Easy"
+  }else if (((current_row$x4_tries + current_row$x5_tries) >
+    (current_row$x1_try + current_row$x2_tries + current_row$x3_tries))== TRUE && ((current_row$x4_tries + current_row$x5_tries) >
+    (current_row$x3_tries + current_row$x4_tries))== TRUE && ((current_row$x4_tries + current_row$x5_tries) >
+    (current_row$x5_tries + current_row$x6_tries))== TRUE && ((current_row$x4_tries + current_row$x5_tries) >
+    (current_row$x6_tries + current_row$x7_or_more_tries_x))== TRUE){
+    difficulty[i]= "Medium"
+  }else if (((current_row$x5_tries + current_row$x6_tries) >
+    (current_row$x1_try + current_row$x2_tries + current_row$x3_tries)) && ((current_row$x5_tries + current_row$x5_tries) >
+    (current_row$x3_tries + current_row$x4_tries)) && ((current_row$x5_tries + current_row$x6_tries) >
+    (current_row$x4_tries + current_row$x5_tries)) && ((current_row$x5_tries + current_row$x6_tries) >
+    (current_row$x6_tries + current_row$x7_or_more_tries_x))){
+    difficulty[i]<- "Hard"
+  }else if (((current_row$x6_tries + current_row$x7_or_more_tries_x) >
+    (current_row$x1_try + current_row$x2_tries + current_row$x3_tries)) && ((current_row$x6_tries + current_row$x7_or_more_tries_x) >
+    (current_row$x3_tries + current_row$x4_tries)) && ((current_row$x6_tries + current_row$x7_or_more_tries_x) >
+    (current_row$x4_tries + current_row$x5_tries)) && ((current_row$x6_tries + current_row$x7_or_more_tries_x) >
+    (current_row$x5_tries + current_row$x6_tries))){
+    difficulty[i]<- "Very Hard"
+  }
+      
+}
+difficulty<-as_tibble(difficulty)
+
+data$difficulty<-difficulty$value
+
+```
+
+```{r}
+#Vowel Counting Function
+get_vowel_count <- function(phrase) {
+  counter <- 0
+  for (i in unlist(strsplit(phrase, ""))) {
+    if ( i %in% c("a", "e", "i", "o", "u")) {
+      counter <- counter + 1 
+    }   
+  }
+  counter
+}
+
+data %>% 
+  filter(difficulty == "vh" | difficulty == "h")  
+  
+
+#Counting Vowels for every word
+vowels<-c()
+counter<-0
+for (i in 1:nrow(data)){
+  current_word = data$word[i]
+  print(current_word)
+  vowels[i]<- get_vowel_count(current_word)
+  print(get_vowel_count(current_word))
+}
+
+data$vowel_count<-vowels
+
+#Counting Number of consonants
+data$consonant_count<-5-data$vowel_count
+
+#Counting tricky letters
+get_tricky_letter_count <- function(phrase) {
+  counter <- 0
+  for (i in unlist(strsplit(phrase, ""))) {
+    if ( i %in% c("r", "u", "w", "z", "x", "y")) {
+      counter <- counter + 1 
+    }   
+  }
+  counter
+}
+
+
+
+```
