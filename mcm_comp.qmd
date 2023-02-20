@@ -22,17 +22,12 @@ library(caret)
 library(gbm)
 library(xgboost)
 library(stringr)
-<<<<<<< HEAD
 all_cores<-parallel::detectCores()
 cl<- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
-=======
 library(AICcmodavg)
+install.packages("udpipe")
 library(udpipe)
-#all_cores<-parallel::detectCores()
-#cl<- makePSOCKcluster(all_cores)
-#registerDoParallel(cl)
->>>>>>> 1f1471d90dcb7387653a48cd1731a8f522d657a6
 ```
 
 ## Importing Data
@@ -41,7 +36,7 @@ library(udpipe)
 data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>% 
   clean_names()
 
-#Removing words that arent
+#Removing words that arent 5 letters
 data<-data %>% 
   filter(word != "rprobe") %>% 
   filter(word != "clen") %>%
@@ -128,7 +123,7 @@ tuned_svm<-svm_rbf(mode = "regression", engine = "kernlab", cost = 32, rbf_sigma
 
 ## Comparing Regressions
 
-## Storing Tuned Models
+## Assessing Word Difficulty
 
 ```{r}
 difficulty<-c()
@@ -173,6 +168,8 @@ difficulty<-as_factor(difficulty)
 data$difficulty<-difficulty
 
 ```
+
+## Analyzing Aspects of the Words
 
 ```{r}
 #Vowel Counting Function
@@ -285,8 +282,6 @@ data %>%
 
 #Detecting parts of speech
 
-library(udpipe)
-library(dplyr)
 udmodel <- udpipe_download_model(language = "english")
 udmodel <- udpipe_load_model(file = udmodel$file_model)
 
@@ -295,9 +290,11 @@ wordle_pos <- udpipe_annotate(udmodel,
                               data$word)
 wordle_pos <- as.data.frame(wordle_pos)
 
-wordle_pos %>% select(token, upos)
+wordle_pos %>% dplyr::select(token, upos)
 
 data$pos <- wordle_pos$upos
+data$xpos<-wordle_pos$xpos
+data$feats<- wordle_pos$feats
 
 
 #Finding Average  vowel count, consonant count, tricky letter count, and double letter count for each difficulty
