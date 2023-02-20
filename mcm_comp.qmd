@@ -22,9 +22,17 @@ library(caret)
 library(gbm)
 library(xgboost)
 library(stringr)
+<<<<<<< HEAD
 all_cores<-parallel::detectCores()
 cl<- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
+=======
+library(AICcmodavg)
+library(udpipe)
+#all_cores<-parallel::detectCores()
+#cl<- makePSOCKcluster(all_cores)
+#registerDoParallel(cl)
+>>>>>>> 1f1471d90dcb7387653a48cd1731a8f522d657a6
 ```
 
 ## Importing Data
@@ -275,7 +283,25 @@ data %>%
   ggplot(aes(x=date, y=difficulty))+
   geom_col(aes(fill = difficulty))
 
+#Detecting parts of speech
+
+library(udpipe)
+library(dplyr)
+udmodel <- udpipe_download_model(language = "english")
+udmodel <- udpipe_load_model(file = udmodel$file_model)
+
+
+wordle_pos <- udpipe_annotate(udmodel, 
+                              data$word)
+wordle_pos <- as.data.frame(wordle_pos)
+
+wordle_pos %>% select(token, upos)
+
+data$pos <- wordle_pos$upos
+
+
 #Finding Average  vowel count, consonant count, tricky letter count, and double letter count for each difficulty
+
 
 data %>% 
   group_by(difficulty) %>% 
