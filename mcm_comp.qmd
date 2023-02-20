@@ -45,8 +45,6 @@ registerDoParallel(cl)
 ```{r}
 data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>% 
   clean_names()
-difficulty_data <- read_excel("difficulty_data.xlsx")
-data$difficulty<-difficulty_data$difficulty
 
 #Removing words that arent
 data<-data %>% 
@@ -198,9 +196,9 @@ vowels<-c()
 counter<-0
 for (i in 1:nrow(data)){
   current_word = data$word[i]
-  print(current_word)
+  #print(current_word)
   vowels[i]<- get_vowel_count(current_word)
-  print(get_vowel_count(current_word))
+  #print(get_vowel_count(current_word))
 }
 
 data$vowel_count<-vowels
@@ -223,9 +221,9 @@ get_tricky_letter_count <- function(phrase) {
 tricky_letters<-c()
 for (i in 1:nrow(data)){
   current_word = data$word[i]
-  print(current_word)
+  #print(current_word)
   tricky_letters[i]<- get_tricky_letter_count(current_word)
-  print(get_tricky_letter_count(current_word))
+  #print(get_tricky_letter_count(current_word))
 }
 
 data$tricky_letters<-tricky_letters
@@ -244,9 +242,9 @@ get_letter_count <- function(phrase) {
 max_repeats<-c()
 for (i in 1:nrow(data)){
   current_word = data$word[i]
-  print(current_word)
+  #print(current_word)
   max_repeats[i]<- get_letter_count(current_word)
-  print(get_tricky_letter_count(current_word))
+  #print(get_tricky_letter_count(current_word))
 }
 
 data$max_repeats<-max_repeats
@@ -256,6 +254,45 @@ data$max_repeats<-max_repeats
 #Checking which words dont have a difficulty
 data$difficulty[data$word == "elder"]<- "Hard"
 data$difficulty[data$word == "naïve" | data$word == "spell" | data$word == "berth"| data$word == "retro"| data$word == "girth"| data$word == "cater"| data$word == "mince"]<-"Medium"
+
+#Making Difficulty a factor
+
+data$difficulty<-as.factor(data$difficulty)
+```
+
+## EDA for Comparing Difficulties
+
+```{r}
+data %>% 
+  group_by(difficulty) %>% 
+  count
+#Assess the vowel count over different difficulties
+data %>% 
+  ggplot(aes(x=difficulty, y=vowel_count))+
+  geom_col(aes(fill = difficulty))
+
+#Assessing Consonant Count Across Difficulties
+data %>% 
+  ggplot(aes(x=difficulty, y=consonant_count))+
+  geom_col(aes(fill = difficulty))
+
+#Assessing Tricky Letter Count Across Difficulties
+data %>% 
+  ggplot(aes(x=difficulty, y=tricky_letters))+
+  geom_col(aes(fill = difficulty))
+
+#Assessing Letter Repetition Across Difficulties
+data %>% 
+  ggplot(aes(x=difficulty, y=max_repeats))+
+  geom_col(aes(fill = difficulty))
+
+#Assessing Difficulty Over Time
+data %>%
+  ggplot(aes(x=date, y=difficulty))+
+  geom_col(aes(fill = difficulty))
+
+
+
 ```
 
 ## Decision for Classifying Difficulty
@@ -269,15 +306,75 @@ training_data<-training(split)
 test_data<-testing(split)
 
 #The Future Date we want to predict the participants for
-future_word<-data_frame(word = "eerie")
+future_word<-data_frame(word = "eerie", vowel_count = 4, consonant_count =1, tricky_letters = 0, max_repeats = 3)
 
 ```
 
 ```{r}
 #Decision Tree #
-tree_model<-decision_tree(mode = "classification", engine = "rpart", cost_complexity = tune(), tree_depth = tune(), min_n = tune())
+#tree_model<-decision_tree(mode = "classification",
+#                          engine = "rpart",
+#                          cost_complexity = tune(),
+#                          tree_depth = tune(),
+#                          min_n = tune())
 
-tree_wf<-workflow() %>% 
-  add_model(tree_model) %>% 
-  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
+#tree_wf<-workflow() %>% 
+#  add_model(tree_model) %>% 
+#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
+
+#folds<-vfold_cv(training_data)
+
+#tree_tuning_grid<-grid_regular(cost_complexity(), tree_depth(), min_n(), levels = 5)
+
+#tree_res<-tree_wf %>%
+#  tune_grid(resamples = folds,
+#            grid = tree_tuning_grid)
+
+#best_tree_params<-tree_res %>% select_best("rmse")
+```
+
+```{r}
+#Accessing model Accuracy
+#tuned_tree<-finalize_model(tree_model, best_tree_params)
+#tree_wf<-tree_wf %>% update_model(tuned_tree) %>% fit(training_data)
+
+#tree_preds<-predict(tree_wf, test_data)
+
+#tree_acc<-mean(tree_preds == test_data$difficulty)
+
+#Predicting "eerie" difficulty
+#predict(tree_wf, future_word)
+```
+
+## Boosted Tree Classification
+
+```{r}
+# Boosted Tree #
+
+#xgb_classification<-boost_tree(mode = "classification", engine = "xgboost", mtry = tune(), trees = 1000, min_n = tune(), tree_depth = tune(), learn_rate = tune(), loss_reduction = tune(),sample_size = tune(), stop_iter = tune())
+
+#xgb_wf<- workflow() %>% 
+#  add_model(xgb_classification) %>% 
+#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
+
+#folds<-vfold_cv(training_data)
+#xgb_grid <- grid_latin_hypercube(
+#  tree_depth(),
+#  min_n(),
+#  loss_reduction(),
+#  sample_size = sample_prop(),
+#  finalize(mtry(), training_data),
+#  learn_rate(),
+#  stop_iter(),
+#  size = 30
+#)
+
+#xgb_res<- xgb_wf %>% 
+#  tune_grid(resample = folds, grid = xgb_grid, control = control_grid(save_pred = TRUE))
+
+#best_xgb_params<- select_best(xgb_res, "accuracy")
+```
+
+```{r}
+  
 ```

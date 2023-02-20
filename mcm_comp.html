@@ -131,39 +131,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span><span class="fu">read_excel</span>(<span class="st">"Problem_C_Data_Wordle.xlsx"</span>, <span class="at">skip=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>difficulty_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"difficulty_data.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>New names:
-* `` -&gt; `...12`</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty<span class="ot">&lt;-</span>difficulty_data<span class="sc">$</span>difficulty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Unknown or uninitialised column: `difficulty`.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Removing words that arent</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span>data <span class="sc">%&gt;%</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"rprobe"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"clen"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"tash"</span>)  <span class="sc">%&gt;%</span> </span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"marxh"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Removing words that arent</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span>data <span class="sc">%&gt;%</span> </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"rprobe"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"clen"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"tash"</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(word <span class="sc">!=</span> <span class="st">"marxh"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="exploratory-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-analysis">Exploratory Analysis</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Visualizing Relationships</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Comparing Date to number of people that participate</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>number_of_reported_results))<span class="sc">+</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Visualizing Relationships</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Comparing Date to number of people that participate</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>number_of_reported_results))<span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="mcm_comp_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Are people getting better</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>x7_or_more_tries_x))<span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Are people getting better</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>x7_or_more_tries_x))<span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Use of `data$x7_or_more_tries_x` is discouraged.
 i Use `x7_or_more_tries_x` instead.</code></pre>
@@ -171,10 +163,10 @@ i Use `x7_or_more_tries_x` instead.</code></pre>
 <div class="cell-output-display">
 <p><img src="mcm_comp_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Are more people trying hard mode</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>number_in_hard_mode))<span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Are more people trying hard mode</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>number_in_hard_mode))<span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Use of `data$number_in_hard_mode` is discouraged.
 i Use `number_in_hard_mode` instead.</code></pre>
@@ -182,10 +174,10 @@ i Use `number_in_hard_mode` instead.</code></pre>
 <div class="cell-output-display">
 <p><img src="mcm_comp_files/figure-html/unnamed-chunk-3-3.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First attempt Guesses over time</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>x1_try))<span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First attempt Guesses over time</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>data<span class="sc">$</span>x1_try))<span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Use of `data$x1_try` is discouraged.
 i Use `x1_try` instead.</code></pre>
@@ -199,16 +191,16 @@ i Use `x1_try` instead.</code></pre>
 <h2 class="anchored" data-anchor-id="problem-1-predicting-number-of-players">Problem 1: Predicting number of players</h2>
 <p>This needs to be a regression model. This data is in no way linear so the first attempt is to create a nonlinear regression method.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating Data splits</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>future_date<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="at">x =</span> <span class="st">"2023/3/1"</span>),</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">contest_number =</span> <span class="dv">620</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating Data splits</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>future_date<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">date =</span> <span class="fu">as.Date</span>(<span class="at">x =</span> <span class="st">"2023/3/1"</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">contest_number =</span> <span class="dv">620</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: `data_frame()` was deprecated in tibble 1.1.0.
 i Please use `tibble()` instead.</code></pre>
@@ -218,24 +210,24 @@ i Please use `tibble()` instead.</code></pre>
 <section id="basic-decision-tree" class="level2">
 <h2 class="anchored" data-anchor-id="basic-decision-tree">Basic Decision Tree</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tuned Model</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tuned_reg_tree<span class="ot">&lt;-</span><span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"rpart"</span>, <span class="at">cost_complexity =</span> <span class="fl">0.0005623413</span>, <span class="at">tree_depth =</span> <span class="dv">11</span>, <span class="at">min_n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Tuned Model</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tuned_reg_tree<span class="ot">&lt;-</span><span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"rpart"</span>, <span class="at">cost_complexity =</span> <span class="fl">0.0005623413</span>, <span class="at">tree_depth =</span> <span class="dv">11</span>, <span class="at">min_n =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="boosted-tree" class="level2">
 <h2 class="anchored" data-anchor-id="boosted-tree">Boosted Tree</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>tuned_reg_xgb<span class="ot">&lt;-</span><span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"xgboost"</span>,<span class="at">mtry =</span> <span class="dv">2</span>, <span class="at">trees =</span> <span class="dv">1000</span>, <span class="at">min_n =</span> <span class="dv">13</span>, <span class="at">tree_depth =</span> <span class="dv">6</span>, <span class="at">learn_rate =</span> <span class="fl">0.01872842</span>, <span class="at">loss_reduction =</span> <span class="fl">1.647096</span>, <span class="at">sample_size =</span> <span class="fl">0.9797893</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>tuned_reg_xgb<span class="ot">&lt;-</span><span class="fu">boost_tree</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"xgboost"</span>,<span class="at">mtry =</span> <span class="dv">2</span>, <span class="at">trees =</span> <span class="dv">1000</span>, <span class="at">min_n =</span> <span class="dv">13</span>, <span class="at">tree_depth =</span> <span class="dv">6</span>, <span class="at">learn_rate =</span> <span class="fl">0.01872842</span>, <span class="at">loss_reduction =</span> <span class="fl">1.647096</span>, <span class="at">sample_size =</span> <span class="fl">0.9797893</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="support-vector-machine-regression" class="level2">
 <h2 class="anchored" data-anchor-id="support-vector-machine-regression">Support Vector Machine Regression</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>tuned_svm<span class="ot">&lt;-</span><span class="fu">svm_rbf</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"kernlab"</span>, <span class="at">cost =</span> <span class="dv">32</span>, <span class="at">rbf_sigma =</span> <span class="dv">1</span>, <span class="at">margin =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Updating Workflow with Tuned Model and Fitting it to Training Data</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>tuned_svm<span class="ot">&lt;-</span><span class="fu">svm_rbf</span>(<span class="at">mode =</span> <span class="st">"regression"</span>, <span class="at">engine =</span> <span class="st">"kernlab"</span>, <span class="at">cost =</span> <span class="dv">32</span>, <span class="at">rbf_sigma =</span> <span class="dv">1</span>, <span class="at">margin =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="comparing-regressions" class="level2">
@@ -244,61 +236,61 @@ i Please use `tibble()` instead.</code></pre>
 <section id="storing-tuned-models" class="level2">
 <h2 class="anchored" data-anchor-id="storing-tuned-models">Storing Tuned Models</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>difficulty<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  current_row<span class="ot">=</span>data[i,]</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Determining the difficulty of this word</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Very Easy"</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Easy"</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))<span class="sc">==</span> <span class="cn">TRUE</span>){</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">=</span> <span class="st">"Medium"</span></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Hard"</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries))){</span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Very Hard"</span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> {difficulty[i]<span class="ot">&lt;-</span><span class="cn">NA</span>}</span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>difficulty<span class="ot">&lt;-</span><span class="fu">as_tibble</span>(difficulty)</span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty<span class="ot">&lt;-</span>difficulty<span class="sc">$</span>value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>difficulty<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  current_row<span class="ot">=</span>data[i,]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#Determining the difficulty of this word</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Very Easy"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Easy"</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries))<span class="sc">==</span> <span class="cn">TRUE</span> <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))<span class="sc">==</span> <span class="cn">TRUE</span>){</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">=</span> <span class="st">"Medium"</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries) <span class="sc">&gt;</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x))){</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Hard"</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span> (((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x1_try <span class="sc">+</span> current_row<span class="sc">$</span>x2_tries <span class="sc">+</span> current_row<span class="sc">$</span>x3_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x3_tries <span class="sc">+</span> current_row<span class="sc">$</span>x4_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x4_tries <span class="sc">+</span> current_row<span class="sc">$</span>x5_tries)) <span class="sc">&amp;&amp;</span> ((current_row<span class="sc">$</span>x6_tries <span class="sc">+</span> current_row<span class="sc">$</span>x7_or_more_tries_x) <span class="sc">&gt;</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    (current_row<span class="sc">$</span>x5_tries <span class="sc">+</span> current_row<span class="sc">$</span>x6_tries))){</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    difficulty[i]<span class="ot">&lt;-</span> <span class="st">"Very Hard"</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> {difficulty[i]<span class="ot">&lt;-</span><span class="cn">NA</span>}</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>difficulty<span class="ot">&lt;-</span><span class="fu">as_tibble</span>(difficulty)</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty<span class="ot">&lt;-</span>difficulty<span class="sc">$</span>value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vowel Counting Function</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>get_vowel_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))) {</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ( i <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"e"</span>, <span class="st">"i"</span>, <span class="st">"o"</span>, <span class="st">"u"</span>)) {</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>      counter <span class="ot">&lt;-</span> counter <span class="sc">+</span> <span class="dv">1</span> </span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    }   </span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  counter</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(difficulty <span class="sc">==</span> <span class="st">"vh"</span> <span class="sc">|</span> difficulty <span class="sc">==</span> <span class="st">"h"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Vowel Counting Function</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>get_vowel_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))) {</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ( i <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"e"</span>, <span class="st">"i"</span>, <span class="st">"o"</span>, <span class="st">"u"</span>)) {</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>      counter <span class="ot">&lt;-</span> counter <span class="sc">+</span> <span class="dv">1</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    }   </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  counter</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(difficulty <span class="sc">==</span> <span class="st">"vh"</span> <span class="sc">|</span> difficulty <span class="sc">==</span> <span class="st">"h"</span>)  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 0 x 13
 # ... with 13 variables: date &lt;dttm&gt;, contest_number &lt;dbl&gt;, word &lt;chr&gt;,
@@ -306,2223 +298,206 @@ i Please use `tibble()` instead.</code></pre>
 #   x2_tries &lt;dbl&gt;, x3_tries &lt;dbl&gt;, x4_tries &lt;dbl&gt;, x5_tries &lt;dbl&gt;,
 #   x6_tries &lt;dbl&gt;, x7_or_more_tries_x &lt;dbl&gt;, difficulty &lt;chr&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting Vowels for every word</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>vowels<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>counter<span class="ot">&lt;-</span><span class="dv">0</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(current_word)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  vowels[i]<span class="ot">&lt;-</span> <span class="fu">get_vowel_count</span>(current_word)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">get_vowel_count</span>(current_word))</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "manly"
-[1] 1
-[1] "molar"
-[1] 2
-[1] "havoc"
-[1] 2
-[1] "impel"
-[1] 2
-[1] "condo"
-[1] 2
-[1] "judge"
-[1] 2
-[1] "extra"
-[1] 2
-[1] "poise"
-[1] 3
-[1] "aorta"
-[1] 3
-[1] "excel"
-[1] 2
-[1] "lunar"
-[1] 2
-[1] "third"
-[1] 1
-[1] "slate"
-[1] 2
-[1] "taper"
-[1] 2
-[1] "chord"
-[1] 1
-[1] "rival"
-[1] 2
-[1] "usual"
-[1] 3
-[1] "spoke"
-[1] 2
-[1] "apply"
-[1] 1
-[1] "naïve"
-[1] 2
-[1] "knock"
-[1] 1
-[1] "braid"
-[1] 2
-[1] "infer"
-[1] 2
-[1] "joust"
-[1] 2
-[1] "amber"
-[1] 2
-[1] "woken"
-[1] 2
-[1] "adore"
-[1] 3
-[1] "torso"
-[1] 2
-[1] "chafe"
-[1] 2
-[1] "eject"
-[1] 2
-[1] "study"
-[1] 1
-[1] "undue"
-[1] 3
-[1] "tepid"
-[1] 2
-[1] "happy"
-[1] 1
-[1] "itchy"
-[1] 1
-[1] "feast"
-[1] 2
-[1] "drive"
-[1] 2
-[1] "prime"
-[1] 2
-[1] "axiom"
-[1] 3
-[1] "brave"
-[1] 2
-[1] "avert"
-[1] 2
-[1] "glyph"
-[1] 0
-[1] "there"
-[1] 2
-[1] "baker"
-[1] 2
-[1] "snarl"
-[1] 1
-[1] "maple"
-[1] 2
-[1] "inane"
-[1] 3
-[1] "valet"
-[1] 2
-[1] "medal"
-[1] 2
-[1] "unite"
-[1] 3
-[1] "rainy"
-[1] 2
-[1] "spell"
-[1] 1
-[1] "begin"
-[1] 2
-[1] "stale"
-[1] 2
-[1] "dream"
-[1] 2
-[1] "photo"
-[1] 2
-[1] "aloud"
-[1] 3
-[1] "inept"
-[1] 2
-[1] "piney"
-[1] 2
-[1] "aptly"
-[1] 1
-[1] "waltz"
-[1] 1
-[1] "libel"
-[1] 2
-[1] "sneak"
-[1] 2
-[1] "carry"
-[1] 1
-[1] "flout"
-[1] 2
-[1] "foggy"
-[1] 1
-[1] "fault"
-[1] 2
-[1] "mummy"
-[1] 1
-[1] "spiel"
-[1] 2
-[1] "grove"
-[1] 2
-[1] "denim"
-[1] 2
-[1] "quirk"
-[1] 2
-[1] "exist"
-[1] 2
-[1] "stein"
-[1] 2
-[1] "spade"
-[1] 2
-[1] "catch"
-[1] 1
-[1] "floor"
-[1] 2
-[1] "equal"
-[1] 3
-[1] "ionic"
-[1] 3
-[1] "valid"
-[1] 2
-[1] "enjoy"
-[1] 2
-[1] "howdy"
-[1] 1
-[1] "vigor"
-[1] 2
-[1] "dandy"
-[1] 1
-[1] "sloth"
-[1] 1
-[1] "bough"
-[1] 2
-[1] "sting"
-[1] 1
-[1] "twine"
-[1] 2
-[1] "leave"
-[1] 3
-[1] "scorn"
-[1] 1
-[1] "scald"
-[1] 1
-[1] "usurp"
-[1] 2
-[1] "soggy"
-[1] 1
-[1] "brisk"
-[1] 1
-[1] "admit"
-[1] 2
-[1] "grate"
-[1] 2
-[1] "glory"
-[1] 1
-[1] "saint"
-[1] 2
-[1] "recap"
-[1] 2
-[1] "alike"
-[1] 3
-[1] "trice"
-[1] 2
-[1] "stick"
-[1] 1
-[1] "chute"
-[1] 2
-[1] "parer"
-[1] 2
-[1] "doubt"
-[1] 2
-[1] "thyme"
-[1] 1
-[1] "alpha"
-[1] 2
-[1] "booze"
-[1] 3
-[1] "tibia"
-[1] 3
-[1] "lofty"
-[1] 1
-[1] "theme"
-[1] 2
-[1] "class"
-[1] 1
-[1] "leery"
-[1] 2
-[1] "taunt"
-[1] 2
-[1] "whoop"
-[1] 2
-[1] "inter"
-[1] 2
-[1] "gully"
-[1] 1
-[1] "charm"
-[1] 1
-[1] "fungi"
-[1] 2
-[1] "prize"
-[1] 2
-[1] "onset"
-[1] 2
-[1] "chief"
-[1] 2
-[1] "gauze"
-[1] 3
-[1] "ruder"
-[1] 2
-[1] "irony"
-[1] 2
-[1] "clown"
-[1] 1
-[1] "needy"
-[1] 2
-[1] "woven"
-[1] 2
-[1] "merit"
-[1] 2
-[1] "waste"
-[1] 2
-[1] "treat"
-[1] 2
-[1] "shrug"
-[1] 1
-[1] "twang"
-[1] 1
-[1] "twice"
-[1] 2
-[1] "gruel"
-[1] 2
-[1] "poker"
-[1] 2
-[1] "khaki"
-[1] 2
-[1] "hunky"
-[1] 1
-[1] "label"
-[1] 2
-[1] "glean"
-[1] 2
-[1] "cling"
-[1] 1
-[1] "patty"
-[1] 1
-[1] "unfit"
-[1] 2
-[1] "smear"
-[1] 2
-[1] "alien"
-[1] 3
-[1] "buggy"
-[1] 1
-[1] "rhyme"
-[1] 1
-[1] "youth"
-[1] 2
-[1] "coyly"
-[1] 1
-[1] "quart"
-[1] 2
-[1] "cramp"
-[1] 1
-[1] "bluff"
-[1] 1
-[1] "upset"
-[1] 2
-[1] "stomp"
-[1] 1
-[1] "motto"
-[1] 2
-[1] "cinch"
-[1] 1
-[1] "elope"
-[1] 3
-[1] "power"
-[1] 2
-[1] "midge"
-[1] 2
-[1] "tryst"
-[1] 0
-[1] "aphid"
-[1] 2
-[1] "trite"
-[1] 2
-[1] "angry"
-[1] 1
-[1] "flock"
-[1] 1
-[1] "wacky"
-[1] 1
-[1] "roomy"
-[1] 2
-[1] "wedge"
-[1] 2
-[1] "liver"
-[1] 2
-[1] "bland"
-[1] 1
-[1] "night"
-[1] 1
-[1] "madam"
-[1] 2
-[1] "berth"
-[1] 1
-[1] "stead"
-[1] 2
-[1] "voice"
-[1] 3
-[1] "agape"
-[1] 3
-[1] "fluff"
-[1] 1
-[1] "field"
-[1] 2
-[1] "sever"
-[1] 2
-[1] "lilac"
-[1] 2
-[1] "egret"
-[1] 2
-[1] "pinto"
-[1] 2
-[1] "hutch"
-[1] 1
-[1] "gawky"
-[1] 1
-[1] "droll"
-[1] 1
-[1] "retro"
-[1] 2
-[1] "rusty"
-[1] 1
-[1] "beady"
-[1] 2
-[1] "smite"
-[1] 2
-[1] "brink"
-[1] 1
-[1] "awful"
-[1] 2
-[1] "gloat"
-[1] 2
-[1] "input"
-[1] 2
-[1] "loser"
-[1] 2
-[1] "cacao"
-[1] 3
-[1] "blown"
-[1] 1
-[1] "apron"
-[1] 2
-[1] "primo"
-[1] 2
-[1] "atone"
-[1] 3
-[1] "donor"
-[1] 2
-[1] "float"
-[1] 2
-[1] "goose"
-[1] 3
-[1] "piety"
-[1] 2
-[1] "girth"
-[1] 1
-[1] "trait"
-[1] 2
-[1] "flood"
-[1] 2
-[1] "gloom"
-[1] 2
-[1] "depth"
-[1] 1
-[1] "froth"
-[1] 1
-[1] "peach"
-[1] 2
-[1] "showy"
-[1] 1
-[1] "creak"
-[1] 2
-[1] "manor"
-[1] 2
-[1] "atoll"
-[1] 2
-[1] "bayou"
-[1] 3
-[1] "crept"
-[1] 1
-[1] "tiara"
-[1] 3
-[1] "asset"
-[1] 2
-[1] "vouch"
-[1] 2
-[1] "album"
-[1] 2
-[1] "hinge"
-[1] 2
-[1] "money"
-[1] 2
-[1] "scrap"
-[1] 1
-[1] "gamer"
-[1] 2
-[1] "glass"
-[1] 1
-[1] "scour"
-[1] 2
-[1] "being"
-[1] 2
-[1] "delve"
-[1] 2
-[1] "yield"
-[1] 2
-[1] "metal"
-[1] 2
-[1] "tipsy"
-[1] 1
-[1] "slung"
-[1] 1
-[1] "farce"
-[1] 2
-[1] "gecko"
-[1] 2
-[1] "shine"
-[1] 2
-[1] "canny"
-[1] 1
-[1] "midst"
-[1] 1
-[1] "badge"
-[1] 2
-[1] "homer"
-[1] 2
-[1] "train"
-[1] 2
-[1] "hairy"
-[1] 2
-[1] "story"
-[1] 1
-[1] "forgo"
-[1] 2
-[1] "larva"
-[1] 2
-[1] "zesty"
-[1] 1
-[1] "shown"
-[1] 1
-[1] "heist"
-[1] 2
-[1] "askew"
-[1] 2
-[1] "inert"
-[1] 2
-[1] "olive"
-[1] 3
-[1] "plant"
-[1] 1
-[1] "oxide"
-[1] 3
-[1] "cargo"
-[1] 2
-[1] "foyer"
-[1] 2
-[1] "flair"
-[1] 2
-[1] "ample"
-[1] 2
-[1] "cheek"
-[1] 2
-[1] "shame"
-[1] 2
-[1] "mince"
-[1] 2
-[1] "chunk"
-[1] 1
-[1] "royal"
-[1] 2
-[1] "squad"
-[1] 2
-[1] "black"
-[1] 1
-[1] "stair"
-[1] 2
-[1] "scare"
-[1] 2
-[1] "foray"
-[1] 2
-[1] "comma"
-[1] 2
-[1] "natal"
-[1] 2
-[1] "shawl"
-[1] 1
-[1] "fewer"
-[1] 2
-[1] "trope"
-[1] 2
-[1] "snout"
-[1] 2
-[1] "lowly"
-[1] 1
-[1] "stove"
-[1] 2
-[1] "shall"
-[1] 1
-[1] "found"
-[1] 2
-[1] "nymph"
-[1] 0
-[1] "epoxy"
-[1] 2
-[1] "depot"
-[1] 2
-[1] "chest"
-[1] 1
-[1] "purge"
-[1] 2
-[1] "slosh"
-[1] 1
-[1] "their"
-[1] 2
-[1] "renew"
-[1] 2
-[1] "allow"
-[1] 2
-[1] "saute"
-[1] 3
-[1] "movie"
-[1] 3
-[1] "cater"
-[1] 2
-[1] "tease"
-[1] 3
-[1] "smelt"
-[1] 1
-[1] "focus"
-[1] 2
-[1] "today"
-[1] 2
-[1] "watch"
-[1] 1
-[1] "lapse"
-[1] 2
-[1] "month"
-[1] 1
-[1] "sweet"
-[1] 2
-[1] "hoard"
-[1] 2
-[1] "cloth"
-[1] 1
-[1] "brine"
-[1] 2
-[1] "ahead"
-[1] 3
-[1] "mourn"
-[1] 2
-[1] "nasty"
-[1] 1
-[1] "rupee"
-[1] 3
-[1] "choke"
-[1] 2
-[1] "chant"
-[1] 1
-[1] "spill"
-[1] 1
-[1] "vivid"
-[1] 2
-[1] "bloke"
-[1] 2
-[1] "trove"
-[1] 2
-[1] "thorn"
-[1] 1
-[1] "other"
-[1] 2
-[1] "tacit"
-[1] 2
-[1] "swill"
-[1] 1
-[1] "dodge"
-[1] 2
-[1] "shake"
-[1] 2
-[1] "caulk"
-[1] 2
-[1] "aroma"
-[1] 3
-[1] "cynic"
-[1] 1
-[1] "robin"
-[1] 2
-[1] "ultra"
-[1] 2
-[1] "ulcer"
-[1] 2
-[1] "pause"
-[1] 3
-[1] "humor"
-[1] 2
-[1] "frame"
-[1] 2
-[1] "elder"
-[1] 2
-[1] "skill"
-[1] 1
-[1] "aloft"
-[1] 2
-[1] "pleat"
-[1] 2
-[1] "shard"
-[1] 1
-[1] "moist"
-[1] 2
-[1] "those"
-[1] 2
-[1] "light"
-[1] 1
-[1] "wrung"
-[1] 1
-[1] "could"
-[1] 2
-[1] "perky"
-[1] 1
-[1] "mount"
-[1] 2
-[1] "whack"
-[1] 1
-[1] "sugar"
-[1] 2
-[1] "knoll"
-[1] 1
-[1] "crimp"
-[1] 1
-[1] "wince"
-[1] 2
-[1] "prick"
-[1] 1
-[1] "robot"
-[1] 2
-[1] "point"
-[1] 2
-[1] "proxy"
-[1] 1
-[1] "shire"
-[1] 2
-[1] "solar"
-[1] 2
-[1] "panic"
-[1] 2
-[1] "tangy"
-[1] 1
-[1] "abbey"
-[1] 2
-[1] "favor"
-[1] 2
-[1] "drink"
-[1] 1
-[1] "query"
-[1] 2
-[1] "gorge"
-[1] 2
-[1] "crank"
-[1] 1
-[1] "slump"
-[1] 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>vowel_count<span class="ot">&lt;-</span>vowels</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting Number of consonants</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>consonant_count<span class="ot">&lt;-</span><span class="dv">5</span><span class="sc">-</span>data<span class="sc">$</span>vowel_count</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating tricky letter function</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>get_tricky_letter_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))) {</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ( i <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"r"</span>, <span class="st">"u"</span>, <span class="st">"w"</span>, <span class="st">"z"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>)) {</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>      counter <span class="ot">&lt;-</span> counter <span class="sc">+</span> <span class="dv">1</span> </span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    }   </span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>  counter</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting tricky letters</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>tricky_letters<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(current_word)</span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>  tricky_letters[i]<span class="ot">&lt;-</span> <span class="fu">get_tricky_letter_count</span>(current_word)</span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">get_tricky_letter_count</span>(current_word))</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "manly"
-[1] 1
-[1] "molar"
-[1] 1
-[1] "havoc"
-[1] 0
-[1] "impel"
-[1] 0
-[1] "condo"
-[1] 0
-[1] "judge"
-[1] 1
-[1] "extra"
-[1] 2
-[1] "poise"
-[1] 0
-[1] "aorta"
-[1] 1
-[1] "excel"
-[1] 1
-[1] "lunar"
-[1] 2
-[1] "third"
-[1] 1
-[1] "slate"
-[1] 0
-[1] "taper"
-[1] 1
-[1] "chord"
-[1] 1
-[1] "rival"
-[1] 1
-[1] "usual"
-[1] 2
-[1] "spoke"
-[1] 0
-[1] "apply"
-[1] 1
-[1] "naïve"
-[1] 0
-[1] "knock"
-[1] 0
-[1] "braid"
-[1] 1
-[1] "infer"
-[1] 1
-[1] "joust"
-[1] 1
-[1] "amber"
-[1] 1
-[1] "woken"
-[1] 1
-[1] "adore"
-[1] 1
-[1] "torso"
-[1] 1
-[1] "chafe"
-[1] 0
-[1] "eject"
-[1] 0
-[1] "study"
-[1] 2
-[1] "undue"
-[1] 2
-[1] "tepid"
-[1] 0
-[1] "happy"
-[1] 1
-[1] "itchy"
-[1] 1
-[1] "feast"
-[1] 0
-[1] "drive"
-[1] 1
-[1] "prime"
-[1] 1
-[1] "axiom"
-[1] 1
-[1] "brave"
-[1] 1
-[1] "avert"
-[1] 1
-[1] "glyph"
-[1] 1
-[1] "there"
-[1] 1
-[1] "baker"
-[1] 1
-[1] "snarl"
-[1] 1
-[1] "maple"
-[1] 0
-[1] "inane"
-[1] 0
-[1] "valet"
-[1] 0
-[1] "medal"
-[1] 0
-[1] "unite"
-[1] 1
-[1] "rainy"
-[1] 2
-[1] "spell"
-[1] 0
-[1] "begin"
-[1] 0
-[1] "stale"
-[1] 0
-[1] "dream"
-[1] 1
-[1] "photo"
-[1] 0
-[1] "aloud"
-[1] 1
-[1] "inept"
-[1] 0
-[1] "piney"
-[1] 1
-[1] "aptly"
-[1] 1
-[1] "waltz"
-[1] 2
-[1] "libel"
-[1] 0
-[1] "sneak"
-[1] 0
-[1] "carry"
-[1] 3
-[1] "flout"
-[1] 1
-[1] "foggy"
-[1] 1
-[1] "fault"
-[1] 1
-[1] "mummy"
-[1] 2
-[1] "spiel"
-[1] 0
-[1] "grove"
-[1] 1
-[1] "denim"
-[1] 0
-[1] "quirk"
-[1] 2
-[1] "exist"
-[1] 1
-[1] "stein"
-[1] 0
-[1] "spade"
-[1] 0
-[1] "catch"
-[1] 0
-[1] "floor"
-[1] 1
-[1] "equal"
-[1] 1
-[1] "ionic"
-[1] 0
-[1] "valid"
-[1] 0
-[1] "enjoy"
-[1] 1
-[1] "howdy"
-[1] 2
-[1] "vigor"
-[1] 1
-[1] "dandy"
-[1] 1
-[1] "sloth"
-[1] 0
-[1] "bough"
-[1] 1
-[1] "sting"
-[1] 0
-[1] "twine"
-[1] 1
-[1] "leave"
-[1] 0
-[1] "scorn"
-[1] 1
-[1] "scald"
-[1] 0
-[1] "usurp"
-[1] 3
-[1] "soggy"
-[1] 1
-[1] "brisk"
-[1] 1
-[1] "admit"
-[1] 0
-[1] "grate"
-[1] 1
-[1] "glory"
-[1] 2
-[1] "saint"
-[1] 0
-[1] "recap"
-[1] 1
-[1] "alike"
-[1] 0
-[1] "trice"
-[1] 1
-[1] "stick"
-[1] 0
-[1] "chute"
-[1] 1
-[1] "parer"
-[1] 2
-[1] "doubt"
-[1] 1
-[1] "thyme"
-[1] 1
-[1] "alpha"
-[1] 0
-[1] "booze"
-[1] 1
-[1] "tibia"
-[1] 0
-[1] "lofty"
-[1] 1
-[1] "theme"
-[1] 0
-[1] "class"
-[1] 0
-[1] "leery"
-[1] 2
-[1] "taunt"
-[1] 1
-[1] "whoop"
-[1] 1
-[1] "inter"
-[1] 1
-[1] "gully"
-[1] 2
-[1] "charm"
-[1] 1
-[1] "fungi"
-[1] 1
-[1] "prize"
-[1] 2
-[1] "onset"
-[1] 0
-[1] "chief"
-[1] 0
-[1] "gauze"
-[1] 2
-[1] "ruder"
-[1] 3
-[1] "irony"
-[1] 2
-[1] "clown"
-[1] 1
-[1] "needy"
-[1] 1
-[1] "woven"
-[1] 1
-[1] "merit"
-[1] 1
-[1] "waste"
-[1] 1
-[1] "treat"
-[1] 1
-[1] "shrug"
-[1] 2
-[1] "twang"
-[1] 1
-[1] "twice"
-[1] 1
-[1] "gruel"
-[1] 2
-[1] "poker"
-[1] 1
-[1] "khaki"
-[1] 0
-[1] "hunky"
-[1] 2
-[1] "label"
-[1] 0
-[1] "glean"
-[1] 0
-[1] "cling"
-[1] 0
-[1] "patty"
-[1] 1
-[1] "unfit"
-[1] 1
-[1] "smear"
-[1] 1
-[1] "alien"
-[1] 0
-[1] "buggy"
-[1] 2
-[1] "rhyme"
-[1] 2
-[1] "youth"
-[1] 2
-[1] "coyly"
-[1] 2
-[1] "quart"
-[1] 2
-[1] "cramp"
-[1] 1
-[1] "bluff"
-[1] 1
-[1] "upset"
-[1] 1
-[1] "stomp"
-[1] 0
-[1] "motto"
-[1] 0
-[1] "cinch"
-[1] 0
-[1] "elope"
-[1] 0
-[1] "power"
-[1] 2
-[1] "midge"
-[1] 0
-[1] "tryst"
-[1] 2
-[1] "aphid"
-[1] 0
-[1] "trite"
-[1] 1
-[1] "angry"
-[1] 2
-[1] "flock"
-[1] 0
-[1] "wacky"
-[1] 2
-[1] "roomy"
-[1] 2
-[1] "wedge"
-[1] 1
-[1] "liver"
-[1] 1
-[1] "bland"
-[1] 0
-[1] "night"
-[1] 0
-[1] "madam"
-[1] 0
-[1] "berth"
-[1] 1
-[1] "stead"
-[1] 0
-[1] "voice"
-[1] 0
-[1] "agape"
-[1] 0
-[1] "fluff"
-[1] 1
-[1] "field"
-[1] 0
-[1] "sever"
-[1] 1
-[1] "lilac"
-[1] 0
-[1] "egret"
-[1] 1
-[1] "pinto"
-[1] 0
-[1] "hutch"
-[1] 1
-[1] "gawky"
-[1] 2
-[1] "droll"
-[1] 1
-[1] "retro"
-[1] 2
-[1] "rusty"
-[1] 3
-[1] "beady"
-[1] 1
-[1] "smite"
-[1] 0
-[1] "brink"
-[1] 1
-[1] "awful"
-[1] 2
-[1] "gloat"
-[1] 0
-[1] "input"
-[1] 1
-[1] "loser"
-[1] 1
-[1] "cacao"
-[1] 0
-[1] "blown"
-[1] 1
-[1] "apron"
-[1] 1
-[1] "primo"
-[1] 1
-[1] "atone"
-[1] 0
-[1] "donor"
-[1] 1
-[1] "float"
-[1] 0
-[1] "goose"
-[1] 0
-[1] "piety"
-[1] 1
-[1] "girth"
-[1] 1
-[1] "trait"
-[1] 1
-[1] "flood"
-[1] 0
-[1] "gloom"
-[1] 0
-[1] "depth"
-[1] 0
-[1] "froth"
-[1] 1
-[1] "peach"
-[1] 0
-[1] "showy"
-[1] 2
-[1] "creak"
-[1] 1
-[1] "manor"
-[1] 1
-[1] "atoll"
-[1] 0
-[1] "bayou"
-[1] 2
-[1] "crept"
-[1] 1
-[1] "tiara"
-[1] 1
-[1] "asset"
-[1] 0
-[1] "vouch"
-[1] 1
-[1] "album"
-[1] 1
-[1] "hinge"
-[1] 0
-[1] "money"
-[1] 1
-[1] "scrap"
-[1] 1
-[1] "gamer"
-[1] 1
-[1] "glass"
-[1] 0
-[1] "scour"
-[1] 2
-[1] "being"
-[1] 0
-[1] "delve"
-[1] 0
-[1] "yield"
-[1] 1
-[1] "metal"
-[1] 0
-[1] "tipsy"
-[1] 1
-[1] "slung"
-[1] 1
-[1] "farce"
-[1] 1
-[1] "gecko"
-[1] 0
-[1] "shine"
-[1] 0
-[1] "canny"
-[1] 1
-[1] "midst"
-[1] 0
-[1] "badge"
-[1] 0
-[1] "homer"
-[1] 1
-[1] "train"
-[1] 1
-[1] "hairy"
-[1] 2
-[1] "story"
-[1] 2
-[1] "forgo"
-[1] 1
-[1] "larva"
-[1] 1
-[1] "zesty"
-[1] 2
-[1] "shown"
-[1] 1
-[1] "heist"
-[1] 0
-[1] "askew"
-[1] 1
-[1] "inert"
-[1] 1
-[1] "olive"
-[1] 0
-[1] "plant"
-[1] 0
-[1] "oxide"
-[1] 1
-[1] "cargo"
-[1] 1
-[1] "foyer"
-[1] 2
-[1] "flair"
-[1] 1
-[1] "ample"
-[1] 0
-[1] "cheek"
-[1] 0
-[1] "shame"
-[1] 0
-[1] "mince"
-[1] 0
-[1] "chunk"
-[1] 1
-[1] "royal"
-[1] 2
-[1] "squad"
-[1] 1
-[1] "black"
-[1] 0
-[1] "stair"
-[1] 1
-[1] "scare"
-[1] 1
-[1] "foray"
-[1] 2
-[1] "comma"
-[1] 0
-[1] "natal"
-[1] 0
-[1] "shawl"
-[1] 1
-[1] "fewer"
-[1] 2
-[1] "trope"
-[1] 1
-[1] "snout"
-[1] 1
-[1] "lowly"
-[1] 2
-[1] "stove"
-[1] 0
-[1] "shall"
-[1] 0
-[1] "found"
-[1] 1
-[1] "nymph"
-[1] 1
-[1] "epoxy"
-[1] 2
-[1] "depot"
-[1] 0
-[1] "chest"
-[1] 0
-[1] "purge"
-[1] 2
-[1] "slosh"
-[1] 0
-[1] "their"
-[1] 1
-[1] "renew"
-[1] 2
-[1] "allow"
-[1] 1
-[1] "saute"
-[1] 1
-[1] "movie"
-[1] 0
-[1] "cater"
-[1] 1
-[1] "tease"
-[1] 0
-[1] "smelt"
-[1] 0
-[1] "focus"
-[1] 1
-[1] "today"
-[1] 1
-[1] "watch"
-[1] 1
-[1] "lapse"
-[1] 0
-[1] "month"
-[1] 0
-[1] "sweet"
-[1] 1
-[1] "hoard"
-[1] 1
-[1] "cloth"
-[1] 0
-[1] "brine"
-[1] 1
-[1] "ahead"
-[1] 0
-[1] "mourn"
-[1] 2
-[1] "nasty"
-[1] 1
-[1] "rupee"
-[1] 2
-[1] "choke"
-[1] 0
-[1] "chant"
-[1] 0
-[1] "spill"
-[1] 0
-[1] "vivid"
-[1] 0
-[1] "bloke"
-[1] 0
-[1] "trove"
-[1] 1
-[1] "thorn"
-[1] 1
-[1] "other"
-[1] 1
-[1] "tacit"
-[1] 0
-[1] "swill"
-[1] 1
-[1] "dodge"
-[1] 0
-[1] "shake"
-[1] 0
-[1] "caulk"
-[1] 1
-[1] "aroma"
-[1] 1
-[1] "cynic"
-[1] 1
-[1] "robin"
-[1] 1
-[1] "ultra"
-[1] 2
-[1] "ulcer"
-[1] 2
-[1] "pause"
-[1] 1
-[1] "humor"
-[1] 2
-[1] "frame"
-[1] 1
-[1] "elder"
-[1] 1
-[1] "skill"
-[1] 0
-[1] "aloft"
-[1] 0
-[1] "pleat"
-[1] 0
-[1] "shard"
-[1] 1
-[1] "moist"
-[1] 0
-[1] "those"
-[1] 0
-[1] "light"
-[1] 0
-[1] "wrung"
-[1] 3
-[1] "could"
-[1] 1
-[1] "perky"
-[1] 2
-[1] "mount"
-[1] 1
-[1] "whack"
-[1] 1
-[1] "sugar"
-[1] 2
-[1] "knoll"
-[1] 0
-[1] "crimp"
-[1] 1
-[1] "wince"
-[1] 1
-[1] "prick"
-[1] 1
-[1] "robot"
-[1] 1
-[1] "point"
-[1] 0
-[1] "proxy"
-[1] 3
-[1] "shire"
-[1] 1
-[1] "solar"
-[1] 1
-[1] "panic"
-[1] 0
-[1] "tangy"
-[1] 1
-[1] "abbey"
-[1] 1
-[1] "favor"
-[1] 1
-[1] "drink"
-[1] 1
-[1] "query"
-[1] 3
-[1] "gorge"
-[1] 1
-[1] "crank"
-[1] 1
-[1] "slump"
-[1] 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>tricky_letters<span class="ot">&lt;-</span>tricky_letters</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating a function for counting letters</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>get_letter_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  letters<span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> letters) {</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a> count <span class="ot">&lt;-</span> <span class="fu">str_count</span>(phrase, i)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a> counter[i]<span class="ot">&lt;-</span>count</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(counter) </span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting the number of occurances of each letter</span></span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>max_repeats<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(current_word)</span>
-<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  max_repeats[i]<span class="ot">&lt;-</span> <span class="fu">get_letter_count</span>(current_word)</span>
-<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">get_tricky_letter_count</span>(current_word))</span>
-<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "manly"
-[1] 1
-[1] "molar"
-[1] 1
-[1] "havoc"
-[1] 0
-[1] "impel"
-[1] 0
-[1] "condo"
-[1] 0
-[1] "judge"
-[1] 1
-[1] "extra"
-[1] 2
-[1] "poise"
-[1] 0
-[1] "aorta"
-[1] 1
-[1] "excel"
-[1] 1
-[1] "lunar"
-[1] 2
-[1] "third"
-[1] 1
-[1] "slate"
-[1] 0
-[1] "taper"
-[1] 1
-[1] "chord"
-[1] 1
-[1] "rival"
-[1] 1
-[1] "usual"
-[1] 2
-[1] "spoke"
-[1] 0
-[1] "apply"
-[1] 1
-[1] "naïve"
-[1] 0
-[1] "knock"
-[1] 0
-[1] "braid"
-[1] 1
-[1] "infer"
-[1] 1
-[1] "joust"
-[1] 1
-[1] "amber"
-[1] 1
-[1] "woken"
-[1] 1
-[1] "adore"
-[1] 1
-[1] "torso"
-[1] 1
-[1] "chafe"
-[1] 0
-[1] "eject"
-[1] 0
-[1] "study"
-[1] 2
-[1] "undue"
-[1] 2
-[1] "tepid"
-[1] 0
-[1] "happy"
-[1] 1
-[1] "itchy"
-[1] 1
-[1] "feast"
-[1] 0
-[1] "drive"
-[1] 1
-[1] "prime"
-[1] 1
-[1] "axiom"
-[1] 1
-[1] "brave"
-[1] 1
-[1] "avert"
-[1] 1
-[1] "glyph"
-[1] 1
-[1] "there"
-[1] 1
-[1] "baker"
-[1] 1
-[1] "snarl"
-[1] 1
-[1] "maple"
-[1] 0
-[1] "inane"
-[1] 0
-[1] "valet"
-[1] 0
-[1] "medal"
-[1] 0
-[1] "unite"
-[1] 1
-[1] "rainy"
-[1] 2
-[1] "spell"
-[1] 0
-[1] "begin"
-[1] 0
-[1] "stale"
-[1] 0
-[1] "dream"
-[1] 1
-[1] "photo"
-[1] 0
-[1] "aloud"
-[1] 1
-[1] "inept"
-[1] 0
-[1] "piney"
-[1] 1
-[1] "aptly"
-[1] 1
-[1] "waltz"
-[1] 2
-[1] "libel"
-[1] 0
-[1] "sneak"
-[1] 0
-[1] "carry"
-[1] 3
-[1] "flout"
-[1] 1
-[1] "foggy"
-[1] 1
-[1] "fault"
-[1] 1
-[1] "mummy"
-[1] 2
-[1] "spiel"
-[1] 0
-[1] "grove"
-[1] 1
-[1] "denim"
-[1] 0
-[1] "quirk"
-[1] 2
-[1] "exist"
-[1] 1
-[1] "stein"
-[1] 0
-[1] "spade"
-[1] 0
-[1] "catch"
-[1] 0
-[1] "floor"
-[1] 1
-[1] "equal"
-[1] 1
-[1] "ionic"
-[1] 0
-[1] "valid"
-[1] 0
-[1] "enjoy"
-[1] 1
-[1] "howdy"
-[1] 2
-[1] "vigor"
-[1] 1
-[1] "dandy"
-[1] 1
-[1] "sloth"
-[1] 0
-[1] "bough"
-[1] 1
-[1] "sting"
-[1] 0
-[1] "twine"
-[1] 1
-[1] "leave"
-[1] 0
-[1] "scorn"
-[1] 1
-[1] "scald"
-[1] 0
-[1] "usurp"
-[1] 3
-[1] "soggy"
-[1] 1
-[1] "brisk"
-[1] 1
-[1] "admit"
-[1] 0
-[1] "grate"
-[1] 1
-[1] "glory"
-[1] 2
-[1] "saint"
-[1] 0
-[1] "recap"
-[1] 1
-[1] "alike"
-[1] 0
-[1] "trice"
-[1] 1
-[1] "stick"
-[1] 0
-[1] "chute"
-[1] 1
-[1] "parer"
-[1] 2
-[1] "doubt"
-[1] 1
-[1] "thyme"
-[1] 1
-[1] "alpha"
-[1] 0
-[1] "booze"
-[1] 1
-[1] "tibia"
-[1] 0
-[1] "lofty"
-[1] 1
-[1] "theme"
-[1] 0
-[1] "class"
-[1] 0
-[1] "leery"
-[1] 2
-[1] "taunt"
-[1] 1
-[1] "whoop"
-[1] 1
-[1] "inter"
-[1] 1
-[1] "gully"
-[1] 2
-[1] "charm"
-[1] 1
-[1] "fungi"
-[1] 1
-[1] "prize"
-[1] 2
-[1] "onset"
-[1] 0
-[1] "chief"
-[1] 0
-[1] "gauze"
-[1] 2
-[1] "ruder"
-[1] 3
-[1] "irony"
-[1] 2
-[1] "clown"
-[1] 1
-[1] "needy"
-[1] 1
-[1] "woven"
-[1] 1
-[1] "merit"
-[1] 1
-[1] "waste"
-[1] 1
-[1] "treat"
-[1] 1
-[1] "shrug"
-[1] 2
-[1] "twang"
-[1] 1
-[1] "twice"
-[1] 1
-[1] "gruel"
-[1] 2
-[1] "poker"
-[1] 1
-[1] "khaki"
-[1] 0
-[1] "hunky"
-[1] 2
-[1] "label"
-[1] 0
-[1] "glean"
-[1] 0
-[1] "cling"
-[1] 0
-[1] "patty"
-[1] 1
-[1] "unfit"
-[1] 1
-[1] "smear"
-[1] 1
-[1] "alien"
-[1] 0
-[1] "buggy"
-[1] 2
-[1] "rhyme"
-[1] 2
-[1] "youth"
-[1] 2
-[1] "coyly"
-[1] 2
-[1] "quart"
-[1] 2
-[1] "cramp"
-[1] 1
-[1] "bluff"
-[1] 1
-[1] "upset"
-[1] 1
-[1] "stomp"
-[1] 0
-[1] "motto"
-[1] 0
-[1] "cinch"
-[1] 0
-[1] "elope"
-[1] 0
-[1] "power"
-[1] 2
-[1] "midge"
-[1] 0
-[1] "tryst"
-[1] 2
-[1] "aphid"
-[1] 0
-[1] "trite"
-[1] 1
-[1] "angry"
-[1] 2
-[1] "flock"
-[1] 0
-[1] "wacky"
-[1] 2
-[1] "roomy"
-[1] 2
-[1] "wedge"
-[1] 1
-[1] "liver"
-[1] 1
-[1] "bland"
-[1] 0
-[1] "night"
-[1] 0
-[1] "madam"
-[1] 0
-[1] "berth"
-[1] 1
-[1] "stead"
-[1] 0
-[1] "voice"
-[1] 0
-[1] "agape"
-[1] 0
-[1] "fluff"
-[1] 1
-[1] "field"
-[1] 0
-[1] "sever"
-[1] 1
-[1] "lilac"
-[1] 0
-[1] "egret"
-[1] 1
-[1] "pinto"
-[1] 0
-[1] "hutch"
-[1] 1
-[1] "gawky"
-[1] 2
-[1] "droll"
-[1] 1
-[1] "retro"
-[1] 2
-[1] "rusty"
-[1] 3
-[1] "beady"
-[1] 1
-[1] "smite"
-[1] 0
-[1] "brink"
-[1] 1
-[1] "awful"
-[1] 2
-[1] "gloat"
-[1] 0
-[1] "input"
-[1] 1
-[1] "loser"
-[1] 1
-[1] "cacao"
-[1] 0
-[1] "blown"
-[1] 1
-[1] "apron"
-[1] 1
-[1] "primo"
-[1] 1
-[1] "atone"
-[1] 0
-[1] "donor"
-[1] 1
-[1] "float"
-[1] 0
-[1] "goose"
-[1] 0
-[1] "piety"
-[1] 1
-[1] "girth"
-[1] 1
-[1] "trait"
-[1] 1
-[1] "flood"
-[1] 0
-[1] "gloom"
-[1] 0
-[1] "depth"
-[1] 0
-[1] "froth"
-[1] 1
-[1] "peach"
-[1] 0
-[1] "showy"
-[1] 2
-[1] "creak"
-[1] 1
-[1] "manor"
-[1] 1
-[1] "atoll"
-[1] 0
-[1] "bayou"
-[1] 2
-[1] "crept"
-[1] 1
-[1] "tiara"
-[1] 1
-[1] "asset"
-[1] 0
-[1] "vouch"
-[1] 1
-[1] "album"
-[1] 1
-[1] "hinge"
-[1] 0
-[1] "money"
-[1] 1
-[1] "scrap"
-[1] 1
-[1] "gamer"
-[1] 1
-[1] "glass"
-[1] 0
-[1] "scour"
-[1] 2
-[1] "being"
-[1] 0
-[1] "delve"
-[1] 0
-[1] "yield"
-[1] 1
-[1] "metal"
-[1] 0
-[1] "tipsy"
-[1] 1
-[1] "slung"
-[1] 1
-[1] "farce"
-[1] 1
-[1] "gecko"
-[1] 0
-[1] "shine"
-[1] 0
-[1] "canny"
-[1] 1
-[1] "midst"
-[1] 0
-[1] "badge"
-[1] 0
-[1] "homer"
-[1] 1
-[1] "train"
-[1] 1
-[1] "hairy"
-[1] 2
-[1] "story"
-[1] 2
-[1] "forgo"
-[1] 1
-[1] "larva"
-[1] 1
-[1] "zesty"
-[1] 2
-[1] "shown"
-[1] 1
-[1] "heist"
-[1] 0
-[1] "askew"
-[1] 1
-[1] "inert"
-[1] 1
-[1] "olive"
-[1] 0
-[1] "plant"
-[1] 0
-[1] "oxide"
-[1] 1
-[1] "cargo"
-[1] 1
-[1] "foyer"
-[1] 2
-[1] "flair"
-[1] 1
-[1] "ample"
-[1] 0
-[1] "cheek"
-[1] 0
-[1] "shame"
-[1] 0
-[1] "mince"
-[1] 0
-[1] "chunk"
-[1] 1
-[1] "royal"
-[1] 2
-[1] "squad"
-[1] 1
-[1] "black"
-[1] 0
-[1] "stair"
-[1] 1
-[1] "scare"
-[1] 1
-[1] "foray"
-[1] 2
-[1] "comma"
-[1] 0
-[1] "natal"
-[1] 0
-[1] "shawl"
-[1] 1
-[1] "fewer"
-[1] 2
-[1] "trope"
-[1] 1
-[1] "snout"
-[1] 1
-[1] "lowly"
-[1] 2
-[1] "stove"
-[1] 0
-[1] "shall"
-[1] 0
-[1] "found"
-[1] 1
-[1] "nymph"
-[1] 1
-[1] "epoxy"
-[1] 2
-[1] "depot"
-[1] 0
-[1] "chest"
-[1] 0
-[1] "purge"
-[1] 2
-[1] "slosh"
-[1] 0
-[1] "their"
-[1] 1
-[1] "renew"
-[1] 2
-[1] "allow"
-[1] 1
-[1] "saute"
-[1] 1
-[1] "movie"
-[1] 0
-[1] "cater"
-[1] 1
-[1] "tease"
-[1] 0
-[1] "smelt"
-[1] 0
-[1] "focus"
-[1] 1
-[1] "today"
-[1] 1
-[1] "watch"
-[1] 1
-[1] "lapse"
-[1] 0
-[1] "month"
-[1] 0
-[1] "sweet"
-[1] 1
-[1] "hoard"
-[1] 1
-[1] "cloth"
-[1] 0
-[1] "brine"
-[1] 1
-[1] "ahead"
-[1] 0
-[1] "mourn"
-[1] 2
-[1] "nasty"
-[1] 1
-[1] "rupee"
-[1] 2
-[1] "choke"
-[1] 0
-[1] "chant"
-[1] 0
-[1] "spill"
-[1] 0
-[1] "vivid"
-[1] 0
-[1] "bloke"
-[1] 0
-[1] "trove"
-[1] 1
-[1] "thorn"
-[1] 1
-[1] "other"
-[1] 1
-[1] "tacit"
-[1] 0
-[1] "swill"
-[1] 1
-[1] "dodge"
-[1] 0
-[1] "shake"
-[1] 0
-[1] "caulk"
-[1] 1
-[1] "aroma"
-[1] 1
-[1] "cynic"
-[1] 1
-[1] "robin"
-[1] 1
-[1] "ultra"
-[1] 2
-[1] "ulcer"
-[1] 2
-[1] "pause"
-[1] 1
-[1] "humor"
-[1] 2
-[1] "frame"
-[1] 1
-[1] "elder"
-[1] 1
-[1] "skill"
-[1] 0
-[1] "aloft"
-[1] 0
-[1] "pleat"
-[1] 0
-[1] "shard"
-[1] 1
-[1] "moist"
-[1] 0
-[1] "those"
-[1] 0
-[1] "light"
-[1] 0
-[1] "wrung"
-[1] 3
-[1] "could"
-[1] 1
-[1] "perky"
-[1] 2
-[1] "mount"
-[1] 1
-[1] "whack"
-[1] 1
-[1] "sugar"
-[1] 2
-[1] "knoll"
-[1] 0
-[1] "crimp"
-[1] 1
-[1] "wince"
-[1] 1
-[1] "prick"
-[1] 1
-[1] "robot"
-[1] 1
-[1] "point"
-[1] 0
-[1] "proxy"
-[1] 3
-[1] "shire"
-[1] 1
-[1] "solar"
-[1] 1
-[1] "panic"
-[1] 0
-[1] "tangy"
-[1] 1
-[1] "abbey"
-[1] 1
-[1] "favor"
-[1] 1
-[1] "drink"
-[1] 1
-[1] "query"
-[1] 3
-[1] "gorge"
-[1] 1
-[1] "crank"
-[1] 1
-[1] "slump"
-[1] 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>max_repeats<span class="ot">&lt;-</span>max_repeats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting Vowels for every word</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>vowels<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>counter<span class="ot">&lt;-</span><span class="dv">0</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(current_word)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  vowels[i]<span class="ot">&lt;-</span> <span class="fu">get_vowel_count</span>(current_word)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(get_vowel_count(current_word))</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>vowel_count<span class="ot">&lt;-</span>vowels</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting Number of consonants</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>consonant_count<span class="ot">&lt;-</span><span class="dv">5</span><span class="sc">-</span>data<span class="sc">$</span>vowel_count</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating tricky letter function</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>get_tricky_letter_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">unlist</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))) {</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> ( i <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"r"</span>, <span class="st">"u"</span>, <span class="st">"w"</span>, <span class="st">"z"</span>, <span class="st">"x"</span>, <span class="st">"y"</span>)) {</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>      counter <span class="ot">&lt;-</span> counter <span class="sc">+</span> <span class="dv">1</span> </span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    }   </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  counter</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting tricky letters</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>tricky_letters<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(current_word)</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  tricky_letters[i]<span class="ot">&lt;-</span> <span class="fu">get_tricky_letter_count</span>(current_word)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(get_tricky_letter_count(current_word))</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>tricky_letters<span class="ot">&lt;-</span>tricky_letters</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating a function for counting letters</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>get_letter_count <span class="ot">&lt;-</span> <span class="cf">function</span>(phrase) {</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>  letters<span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">strsplit</span>(phrase, <span class="st">""</span>))</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>  counter <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> letters) {</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a> count <span class="ot">&lt;-</span> <span class="fu">str_count</span>(phrase, i)</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a> counter[i]<span class="ot">&lt;-</span>count</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(counter) </span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="co">#Counting the number of occurances of each letter</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>max_repeats<span class="ot">&lt;-</span><span class="fu">c</span>()</span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data)){</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>  current_word <span class="ot">=</span> data<span class="sc">$</span>word[i]</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(current_word)</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>  max_repeats[i]<span class="ot">&lt;-</span> <span class="fu">get_letter_count</span>(current_word)</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">#print(get_tricky_letter_count(current_word))</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>max_repeats<span class="ot">&lt;-</span>max_repeats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking which words dont have a difficulty</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty[data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"elder"</span>]<span class="ot">&lt;-</span> <span class="st">"Hard"</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty[data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"naïve"</span> <span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"spell"</span> <span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"berth"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"retro"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"girth"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"cater"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"mince"</span>]<span class="ot">&lt;-</span><span class="st">"Medium"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Checking which words dont have a difficulty</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty[data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"elder"</span>]<span class="ot">&lt;-</span> <span class="st">"Hard"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty[data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"naïve"</span> <span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"spell"</span> <span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"berth"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"retro"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"girth"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"cater"</span><span class="sc">|</span> data<span class="sc">$</span>word <span class="sc">==</span> <span class="st">"mince"</span>]<span class="ot">&lt;-</span><span class="st">"Medium"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Making Difficulty a factor</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>difficulty<span class="ot">&lt;-</span><span class="fu">as.factor</span>(data<span class="sc">$</span>difficulty)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="eda-for-comparing-difficulties" class="level2">
+<h2 class="anchored" data-anchor-id="eda-for-comparing-difficulties">EDA for Comparing Difficulties</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(difficulty) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  count</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 x 2
+# Groups:   difficulty [5]
+  difficulty     n
+  &lt;fct&gt;      &lt;int&gt;
+1 Easy         157
+2 Hard          13
+3 Medium       180
+4 Very Easy      1
+5 Very Hard      4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Assess the vowel count over different difficulties</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>difficulty, <span class="at">y=</span>vowel_count))<span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> difficulty))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mcm_comp_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Assessing Consonant Count Across Difficulties</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>difficulty, <span class="at">y=</span>consonant_count))<span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> difficulty))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mcm_comp_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Assessing Tricky Letter Count Across Difficulties</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>difficulty, <span class="at">y=</span>tricky_letters))<span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> difficulty))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mcm_comp_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Assessing Letter Repetition Across Difficulties</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>difficulty, <span class="at">y=</span>max_repeats))<span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> difficulty))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mcm_comp_files/figure-html/unnamed-chunk-11-4.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Assessing Difficulty Over Time</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y=</span>difficulty))<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">fill =</span> difficulty))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mcm_comp_files/figure-html/unnamed-chunk-11-5.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 </section>
 <section id="decision-for-classifying-difficulty" class="level2">
 <h2 class="anchored" data-anchor-id="decision-for-classifying-difficulty">Decision for Classifying Difficulty</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating Data splits</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>future_word<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">word =</span> <span class="st">"eerie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creating Data splits</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>split<span class="ot">&lt;-</span><span class="fu">initial_split</span>(data, <span class="at">prop =</span> .<span class="dv">9</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>training_data<span class="ot">&lt;-</span><span class="fu">training</span>(split)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>test_data<span class="ot">&lt;-</span><span class="fu">testing</span>(split)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#The Future Date we want to predict the participants for</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>future_word<span class="ot">&lt;-</span><span class="fu">data_frame</span>(<span class="at">word =</span> <span class="st">"eerie"</span>, <span class="at">vowel_count =</span> <span class="dv">4</span>, <span class="at">consonant_count =</span><span class="dv">1</span>, <span class="at">tricky_letters =</span> <span class="dv">0</span>, <span class="at">max_repeats =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Decision Tree #</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>tree_model<span class="ot">&lt;-</span><span class="fu">decision_tree</span>(<span class="at">mode =</span> <span class="st">"classification"</span>, <span class="at">engine =</span> <span class="st">"rpart"</span>, <span class="at">cost_complexity =</span> <span class="fu">tune</span>(), <span class="at">tree_depth =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>())</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>tree_wf<span class="ot">&lt;-</span><span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(tree_model) <span class="sc">%&gt;%</span> </span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(difficulty <span class="sc">~</span> word <span class="sc">+</span> vowel_count <span class="sc">+</span> consonant_count <span class="sc">+</span> tricky_letters <span class="sc">+</span> max_repeats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Decision Tree #</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_model&lt;-decision_tree(mode = "classification",</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                          engine = "rpart",</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                          cost_complexity = tune(),</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                          tree_depth = tune(),</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                          min_n = tune())</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_wf&lt;-workflow() %&gt;% </span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">#  add_model(tree_model) %&gt;% </span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#folds&lt;-vfold_cv(training_data)</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_tuning_grid&lt;-grid_regular(cost_complexity(), tree_depth(), min_n(), levels = 5)</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_res&lt;-tree_wf %&gt;%</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  tune_grid(resamples = folds,</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co">#            grid = tree_tuning_grid)</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#best_tree_params&lt;-tree_res %&gt;% select_best("rmse")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Accessing model Accuracy</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#tuned_tree&lt;-finalize_model(tree_model, best_tree_params)</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_wf&lt;-tree_wf %&gt;% update_model(tuned_tree) %&gt;% fit(training_data)</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_preds&lt;-predict(tree_wf, test_data)</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#tree_acc&lt;-mean(tree_preds == test_data$difficulty)</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Predicting "eerie" difficulty</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#predict(tree_wf, future_word)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="boosted-tree-classification" class="level2">
+<h2 class="anchored" data-anchor-id="boosted-tree-classification">Boosted Tree Classification</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boosted Tree #</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">#xgb_classification&lt;-boost_tree(mode = "classification", engine = "xgboost", mtry = tune(), trees = 1000, min_n = tune(), tree_depth = tune(), learn_rate = tune(), loss_reduction = tune(),sample_size = tune(), stop_iter = tune())</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">#xgb_wf&lt;- workflow() %&gt;% </span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co">#  add_model(xgb_classification) %&gt;% </span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co">#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="co">#folds&lt;-vfold_cv(training_data)</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co">#xgb_grid &lt;- grid_latin_hypercube(</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  tree_depth(),</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  min_n(),</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="co">#  loss_reduction(),</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  sample_size = sample_prop(),</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  finalize(mtry(), training_data),</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  learn_rate(),</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  stop_iter(),</span></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  size = 30</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="co">#)</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="co">#xgb_res&lt;- xgb_wf %&gt;% </span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="co">#  tune_grid(resample = folds, grid = xgb_grid, control = control_grid(save_pred = TRUE))</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a><span class="co">#best_xgb_params&lt;- select_best(xgb_res, "accuracy")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
 </div>
 </section>
 
