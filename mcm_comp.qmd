@@ -309,7 +309,32 @@ wordle_pos %>% select(token, upos)
 data$pos <- wordle_pos$upos
 
 
+#Finding Average  vowel count, consonant count, tricky letter count, and double letter count for each difficulty
 
+
+data %>% 
+  group_by(difficulty) %>% 
+  summarise(avg_vowels= mean(vowel_count),
+            .groups = "drop") %>% 
+  arrange(avg_vowels)
+
+data %>% 
+  group_by(difficulty) %>% 
+  summarise(avg_consonants= mean(consonant_count),
+            .groups = "drop") %>% 
+  arrange(avg_consonants)
+
+data %>% 
+  group_by(difficulty) %>% 
+  summarise(avg_tricky= mean(tricky_letters),
+            .groups = "drop") %>% 
+  arrange(avg_tricky)
+
+data %>% 
+  group_by(difficulty) %>% 
+  summarise(avg_repeats= mean(max_repeats),
+            .groups = "drop") %>% 
+  arrange(avg_repeats)
 
 ```
 
@@ -331,10 +356,10 @@ future_word<-data_frame(word = "eerie", vowel_count = 4, consonant_count =1, tri
 ```{r}
 #Decision Tree #
 #tree_model<-decision_tree(mode = "classification",
-#                          engine = "rpart",
-#                          cost_complexity = tune(),
-#                          tree_depth = tune(),
-#                          min_n = tune())
+ #                         engine = "rpart",
+  #                        cost_complexity = tune(),
+   #                       tree_depth = tune(),
+    #                      min_n = tune())
 
 #tree_wf<-workflow() %>% 
 #  add_model(tree_model) %>% 
