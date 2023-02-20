@@ -35,9 +35,10 @@ library(xgboost)
 library(vip)
 library(stringr)
 library(AICcmodavg)
-all_cores<-parallel::detectCores()
-cl<- makePSOCKcluster(all_cores)
-registerDoParallel(cl)
+library(udpipe)
+#all_cores<-parallel::detectCores()
+#cl<- makePSOCKcluster(all_cores)
+#registerDoParallel(cl)
 ```
 
 ## Importing Data
@@ -290,6 +291,23 @@ data %>%
 data %>%
   ggplot(aes(x=date, y=difficulty))+
   geom_col(aes(fill = difficulty))
+
+#Detecting parts of speech
+
+library(udpipe)
+library(dplyr)
+udmodel <- udpipe_download_model(language = "english")
+udmodel <- udpipe_load_model(file = udmodel$file_model)
+
+
+wordle_pos <- udpipe_annotate(udmodel, 
+                              data$word)
+wordle_pos <- as.data.frame(wordle_pos)
+
+wordle_pos %>% select(token, upos)
+
+data$pos <- wordle_pos$upos
+
 
 
 
