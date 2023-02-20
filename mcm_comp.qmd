@@ -33,6 +33,7 @@ library(caret)
 library(gbm)
 library(xgboost)
 library(vip)
+library(stringr)
 library(AICcmodavg)
 all_cores<-parallel::detectCores()
 cl<- makePSOCKcluster(all_cores)
@@ -46,6 +47,13 @@ data<-read_excel("Problem_C_Data_Wordle.xlsx", skip=1) %>%
   clean_names()
 difficulty_data <- read_excel("difficulty_data.xlsx")
 data$difficulty<-difficulty_data$difficulty
+
+#Removing words that arent
+data<-data %>% 
+  filter(word != "rprobe") %>% 
+  filter(word != "clen") %>%
+  filter(word != "tash")  %>% 
+  filter(word != "marxh")
 ```
 
 ## Exploratory Analysis
@@ -160,7 +168,7 @@ for (i in 1:nrow(data)){
     (current_row$x4_tries + current_row$x5_tries)) && ((current_row$x6_tries + current_row$x7_or_more_tries_x) >
     (current_row$x5_tries + current_row$x6_tries))){
     difficulty[i]<- "Very Hard"
-  }
+  }else {difficulty[i]<-NA}
       
 }
 difficulty<-as_tibble(difficulty)
@@ -200,7 +208,7 @@ data$vowel_count<-vowels
 #Counting Number of consonants
 data$consonant_count<-5-data$vowel_count
 
-#Counting tricky letters
+#Creating tricky letter function
 get_tricky_letter_count <- function(phrase) {
   counter <- 0
   for (i in unlist(strsplit(phrase, ""))) {
@@ -211,6 +219,65 @@ get_tricky_letter_count <- function(phrase) {
   counter
 }
 
+#Counting tricky letters
+tricky_letters<-c()
+for (i in 1:nrow(data)){
+  current_word = data$word[i]
+  print(current_word)
+  tricky_letters[i]<- get_tricky_letter_count(current_word)
+  print(get_tricky_letter_count(current_word))
+}
 
+data$tricky_letters<-tricky_letters
 
+#Creating a function for counting letters
+get_letter_count <- function(phrase) {
+  letters<- as.vector(strsplit(phrase, ""))
+  counter <- c()
+  for (i in letters) {
+ count <- str_count(phrase, i)
+ counter[i]<-count
+  }
+  max(counter) 
+}
+#Counting the number of occurances of each letter
+max_repeats<-c()
+for (i in 1:nrow(data)){
+  current_word = data$word[i]
+  print(current_word)
+  max_repeats[i]<- get_letter_count(current_word)
+  print(get_tricky_letter_count(current_word))
+}
+
+data$max_repeats<-max_repeats
+```
+
+```{r}
+#Checking which words dont have a difficulty
+data$difficulty[data$word == "elder"]<- "Hard"
+data$difficulty[data$word == "naïve" | data$word == "spell" | data$word == "berth"| data$word == "retro"| data$word == "girth"| data$word == "cater"| data$word == "mince"]<-"Medium"
+```
+
+## Decision for Classifying Difficulty
+
+```{r}
+#Creating Data splits
+set.seed(1234)
+
+split<-initial_split(data, prop = .9)
+training_data<-training(split)
+test_data<-testing(split)
+
+#The Future Date we want to predict the participants for
+future_word<-data_frame(word = "eerie")
+
+```
+
+```{r}
+#Decision Tree #
+tree_model<-decision_tree(mode = "classification", engine = "rpart", cost_complexity = tune(), tree_depth = tune(), min_n = tune())
+
+tree_wf<-workflow() %>% 
+  add_model(tree_model) %>% 
+  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
 ```
