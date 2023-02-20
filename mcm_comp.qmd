@@ -9,32 +9,19 @@ editor: visual
 ```{r include=FALSE}
 #Installing Packages
 library(janitor)
-library(Metrics)
 library(readxl)
 library(tidyverse)
 library(tidymodels)
-library("AmesHousing")
-library(stringr)
 library("olsrr")
-library("glmnet")
 library("doParallel")
 library(readr)
-library(maps)
-library(viridis)
-library(usmap)
-library(kknn)
 library(MASS)
 library(rpart)
 library(rpart.plot)
-library(keras)
-library(randomForest)
-library(discrim)
 library(caret)
 library(gbm)
 library(xgboost)
-library(vip)
 library(stringr)
-library(AICcmodavg)
 all_cores<-parallel::detectCores()
 cl<- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
@@ -106,7 +93,11 @@ future_date<-data_frame(date = as.Date(x = "2023/3/1"),
 ```{r}
 #Tuned Model
 tuned_reg_tree<-decision_tree(mode = "regression", engine = "rpart", cost_complexity = 0.0005623413, tree_depth = 11, min_n = 2)
-
+#Testing Model
+reg_tree_wf<-workflow() %>% 
+  add_model(tuned_reg_tree) %>% 
+  add_formula(number_of_reported_results~date+contest_number) %>% 
+  fit(training_data)
 ```
 
 ## Boosted Tree
@@ -169,9 +160,9 @@ for (i in 1:nrow(data)){
   }else {difficulty[i]<-NA}
       
 }
-difficulty<-as_tibble(difficulty)
+difficulty<-as_factor(difficulty)
 
-data$difficulty<-difficulty$value
+data$difficulty<-difficulty
 
 ```
 
@@ -186,10 +177,6 @@ get_vowel_count <- function(phrase) {
   }
   counter
 }
-
-data %>% 
-  filter(difficulty == "vh" | difficulty == "h")  
-  
 
 #Counting Vowels for every word
 vowels<-c()
@@ -255,9 +242,6 @@ data$max_repeats<-max_repeats
 data$difficulty[data$word == "elder"]<- "Hard"
 data$difficulty[data$word == "naïve" | data$word == "spell" | data$word == "berth"| data$word == "retro"| data$word == "girth"| data$word == "cater"| data$word == "mince"]<-"Medium"
 
-#Making Difficulty a factor
-
-data$difficulty<-as.factor(data$difficulty)
 ```
 
 ## EDA for Comparing Difficulties
@@ -330,44 +314,61 @@ training_data<-training(split)
 test_data<-testing(split)
 
 #The Future Date we want to predict the participants for
-future_word<-data_frame(word = "eerie", vowel_count = 4, consonant_count =1, tricky_letters = 0, max_repeats = 3)
+future_word<-tibble(word = "eerie", vowel_count = 4, consonant_count =1, tricky_letters = 0, max_repeats = 3)
 
 ```
 
 ```{r}
 #Decision Tree #
-#tree_model<-decision_tree(mode = "classification",
- #                         engine = "rpart",
-  #                        cost_complexity = tune(),
-   #                       tree_depth = tune(),
-    #                      min_n = tune())
+tree_model<-decision_tree(mode = "classification",
+                          engine = "rpart",
+                          cost_complexity = tune(),
+                          tree_depth = tune(),
+                          min_n = tune())
 
-#tree_wf<-workflow() %>% 
-#  add_model(tree_model) %>% 
-#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
+tree_wf<-workflow() %>% 
+  add_model(tree_model) %>% 
+  add_formula(difficulty~vowel_count+consonant_count+tricky_letters+max_repeats)
 
-#folds<-vfold_cv(training_data)
+folds<-vfold_cv(training_data)
 
-#tree_tuning_grid<-grid_regular(cost_complexity(), tree_depth(), min_n(), levels = 5)
+tree_tuning_grid<-grid_regular(cost_complexity(),
+                               tree_depth(),
+                               min_n(),
+                               levels = 5)
 
-#tree_res<-tree_wf %>%
-#  tune_grid(resamples = folds,
-#            grid = tree_tuning_grid)
+tree_res<-tune_grid(tree_wf,
+                    resamples = folds,
+            grid = tree_tuning_grid)
 
-#best_tree_params<-tree_res %>% select_best("rmse")
+best_tree_params<-tree_res %>% select_best("accuracy")
 ```
 
 ```{r}
 #Accessing model Accuracy
-#tuned_tree<-finalize_model(tree_model, best_tree_params)
-#tree_wf<-tree_wf %>% update_model(tuned_tree) %>% fit(training_data)
+tuned_tree<-finalize_model(tree_model, best_tree_params)
+tree_model<-decision_tree(mode = "classification",
+                          engine = "rpart",
+                          tree_depth = 4,
+                          min_n = 11,
+                          cost_complexity = 1e-10)
+tree_wf<-tree_wf %>%
+  update_model(tree_model) %>% 
+  fit(training_data)
 
-#tree_preds<-predict(tree_wf, test_data)
+tree_preds<-predict(tree_wf, test_data)
 
-#tree_acc<-mean(tree_preds == test_data$difficulty)
+#Assessing where the model overpredicted
+tree_preds %>% 
+  group_by(.pred_class) %>% 
+  count()
+test_data %>% 
+  group_by(difficulty) %>% 
+  count()
+tree_acc<-mean(tree_preds$.pred_class == test_data$difficulty)
 
 #Predicting "eerie" difficulty
-#predict(tree_wf, future_word)
+predict(tree_wf, future_word)
 ```
 
 ## Boosted Tree Classification
@@ -375,30 +376,71 @@ future_word<-data_frame(word = "eerie", vowel_count = 4, consonant_count =1, tri
 ```{r}
 # Boosted Tree #
 
-#xgb_classification<-boost_tree(mode = "classification", engine = "xgboost", mtry = tune(), trees = 1000, min_n = tune(), tree_depth = tune(), learn_rate = tune(), loss_reduction = tune(),sample_size = tune(), stop_iter = tune())
+xgb_classification<-boost_tree(mode = "classification",
+                               engine = "xgboost",
+                               mtry = tune(),
+                               trees = 1000,
+                               min_n = tune(),
+                               tree_depth = tune(),
+                               learn_rate = tune(),
+                               loss_reduction = tune(),
+                               sample_size = tune(),
+                               stop_iter = tune())
 
-#xgb_wf<- workflow() %>% 
-#  add_model(xgb_classification) %>% 
-#  add_formula(difficulty ~ word + vowel_count + consonant_count + tricky_letters + max_repeats)
+xgb_wf<- workflow() %>% 
+  add_model(xgb_classification) %>% 
+  add_formula(difficulty~vowel_count+consonant_count+tricky_letters+max_repeats)
 
-#folds<-vfold_cv(training_data)
-#xgb_grid <- grid_latin_hypercube(
-#  tree_depth(),
-#  min_n(),
-#  loss_reduction(),
-#  sample_size = sample_prop(),
-#  finalize(mtry(), training_data),
-#  learn_rate(),
-#  stop_iter(),
-#  size = 30
-#)
+folds<-vfold_cv(training_data)
+xgb_grid <- grid_latin_hypercube(
+  tree_depth(),
+  min_n(),
+  loss_reduction(),
+  sample_size = sample_prop(),
+  finalize(mtry(), training_data),
+  learn_rate(),
+  stop_iter(),
+  size = 30
+)
 
-#xgb_res<- xgb_wf %>% 
-#  tune_grid(resample = folds, grid = xgb_grid, control = control_grid(save_pred = TRUE))
+xgb_res<- tune_grid(xgb_wf,
+                    resample = folds,
+            grid = xgb_grid,
+            control = control_grid(save_pred = TRUE))
 
-#best_xgb_params<- select_best(xgb_res, "accuracy")
+best_xgb_params<-xgb_res %>% select_best("accuracy")
 ```
 
 ```{r}
-  
+#Accessing model Accuracy
+#This is tuned
+tuned_xgb<-boost_tree(mode = "classification",
+                               engine = "xgboost",
+                               mtry = 9,
+                               trees = 1000,
+                               min_n = 12,
+                               tree_depth = 1,
+                               learn_rate = 0.01458431,
+                               loss_reduction = 2.571962e-08,
+                               sample_size = 0.5142188,
+                               stop_iter = 9)
+
+tuned_xgb<-finalize_model(xgb_classification, best_xgb_params)
+xgb_wf<-xgb_wf %>%
+  update_model(tuned_xgb) %>% 
+  fit(training_data)
+
+xgb_preds<-predict(xgb_wf, test_data)
+
+#Assessing where the model overpredicted
+xgb_preds %>% 
+  group_by(.pred_class) %>% 
+  count()
+test_data %>% 
+  group_by(difficulty) %>% 
+  count()
+xgb_acc<-mean(xgb_preds$.pred_class == test_data$difficulty)
+
+#Predicting "eerie" difficulty
+predict(xgb_wf, future_word)
 ```
