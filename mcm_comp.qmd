@@ -26,7 +26,6 @@ all_cores<-parallel::detectCores()
 cl<- makePSOCKcluster(all_cores)
 registerDoParallel(cl)
 library(AICcmodavg)
-install.packages("udpipe")
 library(udpipe)
 ```
 
@@ -69,6 +68,11 @@ data %>%
   ggplot(aes(x=date, y=data$x1_try))+
   geom_point()
 
+#Average percentages for each score breakpoint
+
+data %>% summarise(across(6:12, mean))
+
+#This shows that x4_tries is our MLE. We need to beat 32.95% accuracy with our model.
 
 
 ```
